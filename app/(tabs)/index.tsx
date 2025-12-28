@@ -1,98 +1,129 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import React, { useState } from 'react';
+import { Image, ScrollView, StatusBar, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import BottomNavbar from '../../components/BottomNavbar';
+import DashboardCard from '../../components/DashboardCard';
+import ProgressCard from '../../components/ProgressCard';
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const [userData, setUserData] = useState({ 
+    name: 'Rayhan Hidayatul Fikri', 
+    points: 1250333,
+    school: 'Institut Teknologi Bandung',
+  });
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+return (
+  <View className="flex-1 bg-white">
+    <StatusBar barStyle="dark-content" backgroundColor="#F9C74E" translucent={true} />
+
+    <SafeAreaView className="flex-1">
+      <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
+        
+        {/* Header Section */}
+        <View className="bg-foundation-yellow-normal pt-4 pb-8 rounded-b-[40px] px-6 relative overflow-visible">
+          
+          <View className="flex-row items-start">
+            <View className="w-16 h-full mr-4 ">
+              <View className="overflow-hidden items-center justify-center">
+                <Image 
+                  source={require('../../assets/images/Profile - Men.png')} 
+                  className="w-16 h-16"
+                  resizeMode="contain"
+                />
+              </View>
+            </View>
+            <View className="flex-1 z-10">
+              <Text className="text-xs text-foundation-yellow-darker/80 font-satoshi-medium italic">
+                Halo, selamat datang kembali
+              </Text>
+              <Text className="text-xl font-satoshi-black text-foundation-yellow-darker mt-0.5">
+                {userData.name}
+              </Text>
+
+              <View className="flex-row items-center mt-1 opacity-80">
+                <Text className="text-xs mr-1">🏫</Text>
+                <Text className="text-[10px] font-satoshi-medium text-foundation-yellow-darker">
+                  {userData.school}
+                </Text>
+              </View>
+
+              <View className="flex-row items-center bg-white px-3 py-1.5 rounded-full self-start mt-2 shadow-sm border border-foundation-yellow-light">
+                <Text className="text-sm mr-1.5">🪶</Text>
+                <Text className="text-xs font-satoshi-bold text-foundation-yellow-darker">
+                  {userData.points.toLocaleString('id-ID')} XP
+                </Text>
+              </View>
+            </View>
+
+            <View className="absolute -right-10 -bottom-12 w-40 h-48">
+              <Image 
+                source={require('../../assets/images/Header.png')} 
+                className="w-full h-full"
+                resizeMode="contain"
+              />
+            </View>
+          </View>
+        </View>
+
+          <View className="px-8 mt-5">
+            <Text className="text-xl font-satoshi-bold text-black mb-3">Jejak Belajar Terbaru</Text>
+          
+            <ProgressCard 
+              title="Ejaan"
+              date="11/20/2025"
+              progress={27}
+              badge="Belajar"
+              badgeColor="yellow"
+            />
+          
+            <ProgressCard 
+              title="Kalimat Efektif"
+              date="11/20/2025"
+              progress={50}
+              badge="Latihan"
+              badgeColor="red"
+            />
+
+            <Text className="text-xl font-satoshi-bold text-black mb-3 mt-6">Jelajahi Fitur Aksara</Text>
+          
+            <View>
+              <DashboardCard 
+                title="Belajar"
+                description="Pelajari modul - modul Aksara yang menarik!"
+                imageSource={require('../../assets/images/BELAJAR.png')}
+                href="/belajar"
+                gradientColors={['#7A96E3', '#5A8BEE']}
+                completed={3}
+                total={3}
+              />
+
+              <DashboardCard 
+                title="Latih"
+                description="Latih pemahamanmu dengan kuis menantang by Aksara"
+                imageSource={require('../../assets/images/LATIH.png')}
+                href="/latihan"
+                gradientColors={['#D45272', '#813855']}
+                completed={2}
+                total={3}
+              />
+
+              <DashboardCard 
+                title="Main"
+                description="Lebih paham lembuat dengan bermain bersama Aksara"
+                imageSource={require('../../assets/images/MAIN.png')}
+                href="/bermain"
+                gradientColors={['#DCC37B', '#B39246']}
+                completed={1}
+                total={3}
+              />
+            </View>
+          </View>
+
+          <View className="h-5" />
+        </ScrollView>
+
+        <BottomNavbar />
+      </SafeAreaView>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
