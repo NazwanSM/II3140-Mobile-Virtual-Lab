@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
+import { Href, useRouter } from 'expo-router';
 import { Image, ImageSourcePropType, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface DashboardCardProps {
@@ -26,7 +26,7 @@ export default function DashboardCard({
 
     return (
         <TouchableOpacity 
-            onPress={() => router.push(href)}
+            onPress={() => router.push(href as Href)}
             className="mb-3 rounded-3xl h-[120px] overflow-hidden"
         >
             <LinearGradient

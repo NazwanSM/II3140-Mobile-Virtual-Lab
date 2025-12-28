@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Image, ScrollView, StatusBar, Text, View } from 'react-native';
+import { getProfile } from '@/lib';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Image, ScrollView, StatusBar, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BottomNavbar from '../../components/BottomNavbar';
 import DashboardCard from '../../components/DashboardCard';
@@ -7,10 +8,35 @@ import ProgressCard from '../../components/ProgressCard';
 
 export default function HomeScreen() {
   const [userData, setUserData] = useState({ 
-    name: 'Rayhan Hidayatul Fikri', 
-    points: 1250333,
-    school: 'Institut Teknologi Bandung',
+    name: '', 
+    points: 0,
+    school: '',
+    username: '',
   });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
+
+  const fetchUserProfile = async () => {
+    try {
+      const profile = await getProfile();
+      
+      if (profile) {
+        setUserData({
+          name: profile.full_name || 'User',
+          points: profile.tinta || 0,
+          school: profile.institution || 'Belum diatur',
+          username: profile.username || '',
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
 return (
   <View className="flex-1 bg-white">
@@ -22,47 +48,53 @@ return (
         {/* Header Section */}
         <View className="bg-foundation-yellow-normal pt-4 pb-8 rounded-b-[40px] px-6 relative overflow-visible">
           
-          <View className="flex-row items-start">
-            <View className="w-16 h-full mr-4 ">
-              <View className="overflow-hidden items-center justify-center">
+          {loading ? (
+            <View className="flex-row items-center justify-center py-8">
+              <ActivityIndicator size="large" color="#B39246" />
+            </View>
+          ) : (
+            <View className="flex-row items-start">
+              <View className="w-16 h-full mr-4 ">
+                <View className="overflow-hidden items-center justify-center">
+                  <Image 
+                    source={require('../../assets/images/Profile - Men.png')} 
+                    className="w-16 h-16"
+                    resizeMode="contain"
+                  />
+                </View>
+              </View>
+              <View className="flex-1 z-10">
+                <Text className="text-xs text-foundation-yellow-darker/80 font-satoshi-medium italic">
+                  Halo, selamat datang kembali
+                </Text>
+                <Text className="text-xl font-satoshi-black text-foundation-yellow-darker mt-0.5">
+                  {userData.name}
+                </Text>
+
+                <View className="flex-row items-center mt-1 opacity-80">
+                  <Text className="text-xs mr-1">🏫</Text>
+                  <Text className="text-[10px] font-satoshi-medium text-foundation-yellow-darker">
+                    {userData.school}
+                  </Text>
+                </View>
+
+                <View className="flex-row items-center bg-white px-3 py-1.5 rounded-full self-start mt-2 shadow-sm border border-foundation-yellow-light">
+                  <Text className="text-sm mr-1.5">🪶</Text>
+                  <Text className="text-xs font-satoshi-bold text-foundation-yellow-darker">
+                    {userData.points.toLocaleString('id-ID')} XP
+                  </Text>
+                </View>
+              </View>
+
+              <View className="absolute -right-10 -bottom-12 w-40 h-48">
                 <Image 
-                  source={require('../../assets/images/Profile - Men.png')} 
-                  className="w-16 h-16"
+                  source={require('../../assets/images/Header.png')} 
+                  className="w-full h-full"
                   resizeMode="contain"
                 />
               </View>
             </View>
-            <View className="flex-1 z-10">
-              <Text className="text-xs text-foundation-yellow-darker/80 font-satoshi-medium italic">
-                Halo, selamat datang kembali
-              </Text>
-              <Text className="text-xl font-satoshi-black text-foundation-yellow-darker mt-0.5">
-                {userData.name}
-              </Text>
-
-              <View className="flex-row items-center mt-1 opacity-80">
-                <Text className="text-xs mr-1">🏫</Text>
-                <Text className="text-[10px] font-satoshi-medium text-foundation-yellow-darker">
-                  {userData.school}
-                </Text>
-              </View>
-
-              <View className="flex-row items-center bg-white px-3 py-1.5 rounded-full self-start mt-2 shadow-sm border border-foundation-yellow-light">
-                <Text className="text-sm mr-1.5">🪶</Text>
-                <Text className="text-xs font-satoshi-bold text-foundation-yellow-darker">
-                  {userData.points.toLocaleString('id-ID')} XP
-                </Text>
-              </View>
-            </View>
-
-            <View className="absolute -right-10 -bottom-12 w-40 h-48">
-              <Image 
-                source={require('../../assets/images/Header.png')} 
-                className="w-full h-full"
-                resizeMode="contain"
-              />
-            </View>
-          </View>
+          )}
         </View>
 
           <View className="px-8 mt-5">
