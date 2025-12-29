@@ -5,7 +5,7 @@ export { supabase } from './supabase/client';
 export {
     getProfile,
     getSession, getUser, signInWithEmail, signInWithUsername, signOut, signUpWithEmail
-    // , signInWithGoogle
+    , signInWithGoogle
 } from './actions/auth';
 
 // Profile actions
@@ -14,20 +14,20 @@ export {
     getUserArtworks, selectArtwork, updatePassword, updateProfile
 } from './actions/profile';
 
-// // Progress actions
-// export {
-//     getAllProgress, getModuleProgress, getRecentProgress, updateModuleProgress
-// } from './actions/progress';
+// Progress actions
+export {
+    getAllProgress, getModuleProgress, getRecentProgress, updateModuleProgress
+} from './actions/progress';
 
-// // Quiz actions
-// export {
-//     getAllQuizResults, getQuizQuestions,
-//     getQuizResults, submitQuiz
-// } from './actions/quiz';
+// Quiz actions
+export {
+    getAllQuizResults, getQuizQuestions,
+    getQuizResults, submitQuiz
+} from './actions/quiz';
 
-// // Module actions
-// export {
-//     getModuleById,
-//     getModuleBySlug, getModuleContent, getModules, getModulesWithProgress
-// } from './actions/modules';
+// Module actions
+export {
+    getModuleById,
+    getModuleBySlug, getModuleContent, getModules, getModulesWithProgress
+} from './actions/modules';
 

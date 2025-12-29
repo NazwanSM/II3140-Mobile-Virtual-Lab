@@ -1,66 +1,66 @@
-// import * as AuthSession from 'expo-auth-session';
+import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
 import { supabase } from '../supabase/client';
 
 WebBrowser.maybeCompleteAuthSession();
 
-// const redirectTo = AuthSession.makeRedirectUri({
-//     scheme: 'aksara',
-//     path: 'auth/callback',
-// });
+const redirectTo = AuthSession.makeRedirectUri({
+    scheme: 'aksara',
+    path: 'auth/callback',
+});
 
-// export async function signInWithGoogle() {
-//     try {
-//         const { data, error } = await supabase.auth.signInWithOAuth({
-//         provider: 'google',
-//         options: {
-//             redirectTo,
-//             skipBrowserRedirect: true,
-//         },
-//         });
+export async function signInWithGoogle() {
+    try {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+            redirectTo,
+            skipBrowserRedirect: true,
+        },
+        });
 
-//         if (error) {
-//         console.error('Error signing in with Google:', error);
-//         return { error: error.message };
-//         }
+        if (error) {
+        console.error('Error signing in with Google:', error);
+        return { error: error.message };
+        }
 
-//         if (data.url) {
-//         const result = await WebBrowser.openAuthSessionAsync(
-//             data.url,
-//             redirectTo
-//         );
+        if (data.url) {
+        const result = await WebBrowser.openAuthSessionAsync(
+            data.url,
+            redirectTo
+        );
 
-//         if (result.type === 'success') {
-//             const url = result.url;
-//             const params = new URL(url).hash.substring(1);
-//             const urlParams = new URLSearchParams(params);
+        if (result.type === 'success') {
+            const url = result.url;
+            const params = new URL(url).hash.substring(1);
+            const urlParams = new URLSearchParams(params);
             
-//             const accessToken = urlParams.get('access_token');
-//             const refreshToken = urlParams.get('refresh_token');
+            const accessToken = urlParams.get('access_token');
+            const refreshToken = urlParams.get('refresh_token');
 
-//             if (accessToken && refreshToken) {
-//             const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
-//                 access_token: accessToken,
-//                 refresh_token: refreshToken,
-//             });
+            if (accessToken && refreshToken) {
+            const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
+                access_token: accessToken,
+                refresh_token: refreshToken,
+            });
 
-//             if (sessionError) {
-//                 return { error: sessionError.message };
-//             }
+            if (sessionError) {
+                return { error: sessionError.message };
+            }
 
-//             return { success: true, user: sessionData.user };
-//             }
-//         }
+            return { success: true, user: sessionData.user };
+            }
+        }
 
-//         return { error: 'Authentication cancelled' };
-//         }
+        return { error: 'Authentication cancelled' };
+        }
 
-//         return { error: 'No auth URL returned' };
-//     } catch (error) {
-//         console.error('Error in signInWithGoogle:', error);
-//         return { error: 'Failed to sign in with Google' };
-//     }
-// }
+        return { error: 'No auth URL returned' };
+    } catch (error) {
+        console.error('Error in signInWithGoogle:', error);
+        return { error: 'Failed to sign in with Google' };
+    }
+}
 
 export async function signInWithEmail(email: string, password: string) {
     try {

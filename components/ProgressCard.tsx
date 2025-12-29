@@ -30,7 +30,7 @@ export default function ProgressCard({ title, date, progress, badge, badgeColor 
             <View className="flex-1">
             <Text className="text-base font-satoshi-bold text-gray-800">{title}</Text>
             <View className="flex-row items-center mt-1">
-                <Ionicons name="calendar" size={14} color="#666" />
+                <Ionicons name="calendar" size={14} color="#4B68F7" />
                 <Text className="text-sm font-satoshi text-gray-600 ml-1">{date}</Text>
             </View>
             </View>

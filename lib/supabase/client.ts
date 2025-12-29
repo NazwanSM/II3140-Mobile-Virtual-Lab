@@ -4,12 +4,13 @@ import { Platform } from 'react-native';
 
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
+const isClient = typeof window !== 'undefined';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     auth: {
-        storage: AsyncStorage,
-        autoRefreshToken: true,
-        persistSession: true,
-        detectSessionInUrl: Platform.OS === 'web',
+        storage: isClient ? AsyncStorage : undefined,
+        autoRefreshToken: isClient,
+        persistSession: isClient,
+        detectSessionInUrl: Platform.OS === 'web' && isClient,
     },
 });

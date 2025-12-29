@@ -1,151 +1,162 @@
 import { Ionicons } from '@expo/vector-icons';
-import { usePathname, useRouter } from 'expo-router';
-import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Href, usePathname, useRouter } from 'expo-router';
+import React, { useEffect } from 'react';
+import { Pressable, View } from 'react-native';
+import Animated, {
+    useAnimatedStyle,
+    useSharedValue,
+    withSpring,
+} from 'react-native-reanimated';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+type NavItemProps = {
+    icon: keyof typeof Ionicons.glyphMap;
+    label: string;
+    isActive: boolean;
+    onPress: () => void;
+};
+
+function NavItem({ icon, label, isActive, onPress }: NavItemProps) {
+    const scale = useSharedValue(1);
+    const width = useSharedValue(isActive ? 85 : 26);
+    const opacity = useSharedValue(isActive ? 1 : 0);
+
+    useEffect(() => {
+        if (isActive) {
+            // Animate in (less bouncy)
+            width.value = withSpring(85, {
+                damping: 20,
+                stiffness: 180,
+            });
+            opacity.value = withSpring(1, {
+                damping: 20,
+                stiffness: 180,
+            });
+        } else {
+            // Instant disappear for inactive
+            width.value = 26;
+            opacity.value = 0;
+        }
+    }, [isActive, opacity, width]);
+
+    const containerStyle = useAnimatedStyle(() => ({
+        transform: [{ scale: scale.value }],
+    }));
+
+    const pillStyle = useAnimatedStyle(() => ({
+        width: width.value,
+    }));
+
+    const textStyle = useAnimatedStyle(() => ({
+        opacity: opacity.value,
+    }));
+
+    const handlePressIn = () => {
+        scale.value = withSpring(0.92, { damping: 10, stiffness: 500 });
+    };
+
+    const handlePressOut = () => {
+        scale.value = withSpring(1, { damping: 10, stiffness: 500 });
+    };
+
+    return (
+        <AnimatedPressable
+            onPress={onPress}
+            onPressIn={handlePressIn}
+            onPressOut={handlePressOut}
+            style={containerStyle}
+            className="items-center justify-center w-[85px] h-[50px]"
+        >
+            <Animated.View
+                style={[
+                    pillStyle,
+                    {
+                        backgroundColor: 'white',
+                        borderRadius: 25,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        paddingVertical: isActive ? 10 : 0,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: isActive ? 0.15 : 0,
+                        shadowRadius: 3.84,
+                        elevation: isActive ? 5 : 0,
+                    },
+                ]}
+            >
+                <Ionicons
+                    name={icon}
+                    size={24}
+                    color={isActive ? '#F9C74E' : '#9CA3AF'}
+                />
+                {isActive && (
+                    <Animated.Text
+                        style={[
+                            textStyle,
+                            {
+                                fontFamily: 'Satoshi-Bold',
+                                fontSize: 11,
+                                color: '#F9C74E',
+                                marginLeft: 6,
+                            },
+                        ]}
+                        numberOfLines={1}
+                    >
+                        {label}
+                    </Animated.Text>
+                )}
+            </Animated.View>
+        </AnimatedPressable>
+    );
+}
 
 export default function BottomNavbar() {
     const router = useRouter();
     const pathname = usePathname();
 
-    const isActive = (path: string) => pathname === path;
+    const isActive = (paths: string[]) => 
+        paths.some(path => pathname === path || pathname.endsWith(path));
+
+    const navItems = [
+        {
+            icon: 'home' as const,
+            label: 'Beranda',
+            paths: ['/', '/index', '/(tabs)', '/(tabs)/index'],
+            route: '/(tabs)' as const,
+        },
+        {
+            icon: 'book' as const,
+            label: 'Belajar',
+            paths: ['/belajar', '/(tabs)/belajar'],
+            route: '/(tabs)/belajar' as const,
+        },
+        {
+            icon: 'game-controller' as const,
+            label: 'Main',
+            paths: ['/games', '/(tabs)/games'],
+            route: '/(tabs)/games' as const,
+        },
+        {
+            icon: 'person' as const,
+            label: 'Profil',
+            paths: ['/profile', '/(tabs)/profile'],
+            route: '/(tabs)/profile' as const,
+        },
+    ];
 
     return (
-        <View className="bg-white border-t border-gray-200 flex-row justify-around items-center py-3 px-6">
-        {/* Home / Beranda */}
-        <TouchableOpacity 
-            onPress={() => router.push('/')}
-            className="items-center"
-        >
-            {isActive('/') ? (
-                <View 
-                    className="bg-white rounded-full px-5 py-2.5 flex-row items-center"
-                    style={{
-                        shadowColor: '#000',
-                        shadowOffset: { width: 0, height: 2 },
-                        shadowOpacity: 0.15,
-                        shadowRadius: 3.84,
-                        elevation: 5,
-                    }}
-                >
-                    <Ionicons 
-                        name="home" 
-                        size={24} 
-                        color="#F9C74E" 
-                    />
-                    <Text className="ml-2 font-satoshi-bold text-foundation-yellow-normal text-base">
-                        Beranda
-                    </Text>
-                </View>
-            ) : (
-                <Ionicons 
-                    name="home" 
-                    size={26} 
-                    color="#9CA3AF" 
+        <View className="bg-white border-t border-gray-200 flex-row justify-between items-center py-2 px-4">
+            {navItems.map((item) => (
+                <NavItem
+                    key={item.route}
+                    icon={item.icon}
+                    label={item.label}
+                    isActive={isActive(item.paths)}
+                    onPress={() => router.push(item.route as Href)}
                 />
-            )}
-        </TouchableOpacity>
-
-        {/* Tasks / Calendar */}
-        <TouchableOpacity 
-            onPress={() => router.push('/tasks')}
-            className="items-center"
-        >
-            {isActive('/tasks') ? (
-                <View 
-                    className="bg-white rounded-full px-5 py-2.5 flex-row items-center"
-                    style={{
-                        shadowColor: '#000',
-                        shadowOffset: { width: 0, height: 2 },
-                        shadowOpacity: 0.15,
-                        shadowRadius: 3.84,
-                        elevation: 5,
-                    }}
-                >
-                    <Ionicons 
-                        name="calendar" 
-                        size={24} 
-                        color="#F9C74E" 
-                    />
-                    <Text className="ml-2 font-satoshi-bold text-foundation-yellow-normal text-base">
-                        Tugas
-                    </Text>
-                </View>
-            ) : (
-                <Ionicons 
-                    name="calendar" 
-                    size={26} 
-                    color="#9CA3AF" 
-                />
-            )}
-        </TouchableOpacity>
-
-        {/* Games */}
-        <TouchableOpacity 
-            onPress={() => router.push('/games')}
-            className="items-center"
-        >
-            {isActive('/games') ? (
-                <View 
-                    className="bg-white rounded-full px-5 py-2.5 flex-row items-center"
-                    style={{
-                        shadowColor: '#000',
-                        shadowOffset: { width: 0, height: 2 },
-                        shadowOpacity: 0.15,
-                        shadowRadius: 3.84,
-                        elevation: 5,
-                    }}
-                >
-                    <Ionicons 
-                        name="game-controller" 
-                        size={24} 
-                        color="#F9C74E" 
-                    />
-                    <Text className="ml-2 font-satoshi-bold text-foundation-yellow-normal text-base">
-                        Main
-                    </Text>
-                </View>
-            ) : (
-                <Ionicons 
-                    name="game-controller" 
-                    size={26} 
-                    color="#9CA3AF" 
-                />
-            )}
-        </TouchableOpacity>
-
-        {/* Profile */}
-        <TouchableOpacity 
-            onPress={() => router.push('/profile')}
-            className="items-center"
-        >
-            {isActive('/profile') ? (
-                <View 
-                    className="bg-white rounded-full px-5 py-2.5 flex-row items-center"
-                    style={{
-                        shadowColor: '#000',
-                        shadowOffset: { width: 0, height: 2 },
-                        shadowOpacity: 0.15,
-                        shadowRadius: 3.84,
-                        elevation: 5,
-                    }}
-                >
-                    <Ionicons 
-                        name="people" 
-                        size={24} 
-                        color="#F9C74E" 
-                    />
-                    <Text className="ml-2 font-satoshi-bold text-foundation-yellow-normal text-base">
-                        Profil
-                    </Text>
-                </View>
-            ) : (
-                <Ionicons 
-                    name="people" 
-                    size={26} 
-                    color="#9CA3AF" 
-                />
-            )}
-        </TouchableOpacity>
+            ))}
         </View>
     );
 }

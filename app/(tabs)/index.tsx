@@ -1,5 +1,6 @@
 import { getProfile } from '@/lib';
-import React, { useEffect, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Image, ScrollView, StatusBar, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BottomNavbar from '../../components/BottomNavbar';
@@ -15,11 +16,7 @@ export default function HomeScreen() {
   });
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchUserProfile();
-  }, []);
-
-  const fetchUserProfile = async () => {
+  const fetchUserProfile = useCallback(async () => {
     try {
       const profile = await getProfile();
       
@@ -36,21 +33,35 @@ export default function HomeScreen() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchUserProfile();
+  }, [fetchUserProfile]);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchUserProfile();
+    }, [fetchUserProfile])
+  );
 
 return (
   <View className="flex-1 bg-white">
-    <StatusBar barStyle="dark-content" backgroundColor="#F9C74E" translucent={true} />
+    <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
 
-    <SafeAreaView className="flex-1">
-      <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
+    <SafeAreaView className="flex-1" edges={['bottom']}>
+      
         
-        {/* Header Section */}
-        <View className="bg-foundation-yellow-normal pt-4 pb-8 rounded-b-[40px] px-6 relative overflow-visible">
+        <View className="pt-16 px-6 relative overflow-hidden">
+          <Image
+            source={require('../../assets/images/Background-Header.png')}
+            className="absolute top-0 left-0 right-0 bottom-0 w-[112%] h-[160%] translate-x-0 -translate-y-1 rounded-b-[30px]"
+            resizeMode="cover"
+          />
           
           {loading ? (
             <View className="flex-row items-center justify-center py-8">
-              <ActivityIndicator size="large" color="#B39246" />
+              <ActivityIndicator size="large" color="#8B7355" />
             </View>
           ) : (
             <View className="flex-row items-start">
@@ -64,39 +75,39 @@ return (
                 </View>
               </View>
               <View className="flex-1 z-10">
-                <Text className="text-xs text-foundation-yellow-darker/80 font-satoshi-medium italic">
+                <Text className="text-xs text-foundation-yellow-dark font-satoshi-medium italic">
                   Halo, selamat datang kembali
                 </Text>
-                <Text className="text-xl font-satoshi-black text-foundation-yellow-darker mt-0.5">
+                <Text className="text-lg font-satoshi-bold text-foundation-yellow-darker mt-0.5" >
                   {userData.name}
                 </Text>
 
                 <View className="flex-row items-center mt-1 opacity-80">
                   <Text className="text-xs mr-1">🏫</Text>
-                  <Text className="text-[10px] font-satoshi-medium text-foundation-yellow-darker">
+                  <Text className="text-[10px] font-satoshi-medium text-foundation-yellow-dark">
                     {userData.school}
                   </Text>
                 </View>
 
-                <View className="flex-row items-center bg-white px-3 py-1.5 rounded-full self-start mt-2 shadow-sm border border-foundation-yellow-light">
-                  <Text className="text-sm mr-1.5">🪶</Text>
+                <View className="flex-row items-center bg-foundation-yellow-light px-10 py-1.5 rounded-full self-start mt-2 shadow-sm">
+                  <Text className="text-xs mr-1.5">🪶</Text>
                   <Text className="text-xs font-satoshi-bold text-foundation-yellow-darker">
-                    {userData.points.toLocaleString('id-ID')} XP
+                    {userData.points.toLocaleString('id-ID')} 
                   </Text>
                 </View>
               </View>
 
-              <View className="absolute -right-10 -bottom-12 w-40 h-48">
+              <View className="w-28 h-28 -mt-1.4 -mr-6">
                 <Image 
                   source={require('../../assets/images/Header.png')} 
-                  className="w-full h-full"
+                  className="w-full h-full rounded-b-[30px]"
                   resizeMode="contain"
                 />
               </View>
             </View>
           )}
         </View>
-
+        <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
           <View className="px-8 mt-5">
             <Text className="text-xl font-satoshi-bold text-black mb-3">Jejak Belajar Terbaru</Text>
           
