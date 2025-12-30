@@ -12,6 +12,70 @@ interface UserArtwork {
     id: string;
 }
 
+export async function getProfile() {
+    try {
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+            return null;
+        }
+
+        // Try to get profile
+        const { data: profile, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .maybeSingle();
+
+        if (error && error.code !== 'PGRST116') {
+            console.error('Error fetching profile:', error);
+            return null;
+        }
+
+        // If profile exists, return it
+        if (profile) {
+            return profile;
+        }
+
+        // Profile doesn't exist, try to create it
+        console.log('Profile not found, creating new profile for user:', user.id);
+        const { data: newProfile, error: insertError } = await supabase
+            .from('profiles')
+            .insert({
+                id: user.id,
+                email: user.email,
+                full_name: user.user_metadata?.full_name || user.email?.split('@')[0],
+                username: user.user_metadata?.username || null,
+                institution: user.user_metadata?.institution || null,
+                tinta: 0
+            })
+            .select()
+            .single();
+
+        if (insertError) {
+            // If duplicate key error, profile already exists - try to fetch again
+            if (insertError.code === '23505') {
+                console.log('Profile already exists, fetching again...');
+                const { data: existingProfile } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', user.id)
+                    .single();
+                
+                return existingProfile;
+            }
+            
+            console.error('Error creating profile:', insertError);
+            return null;
+        }
+
+        return newProfile;
+    } catch (error) {
+        console.error('Error getting profile:', error);
+        return null;
+    }
+}
+
 export async function selectArtwork(artworkId: string) {
     try {
         const { data: { user } } = await supabase.auth.getUser();
@@ -202,6 +266,50 @@ export async function getUserArtworks() {
         return userArtworks || [];
     } catch (error) {
         console.error('Error getting user artworks:', error);
+        return [];
+    }
+}
+
+export async function getArtworksWithUserStatus() {
+    try {
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+            return [];
+        }
+
+        const { data: artworks, error: artworksError } = await supabase
+            .from('artworks')
+            .select('*')
+            .order('artwork_number', { ascending: true });
+
+        if (artworksError) {
+            console.error('Error fetching artworks:', artworksError);
+            return [];
+        }
+
+        const { data: userArtworks, error: userArtworksError } = await supabase
+            .from('user_artworks')
+            .select('artwork_id, is_active')
+            .eq('user_id', user.id);
+
+        if (userArtworksError) {
+            console.error('Error fetching user artworks:', userArtworksError);
+            return [];
+        }
+
+        const artworksWithStatus = artworks?.map(artwork => {
+            const userArtwork = userArtworks?.find(ua => ua.artwork_id === artwork.id);
+            return {
+                ...artwork,
+                is_unlocked: !!userArtwork,
+                is_active: userArtwork?.is_active || false
+            };
+        }) || [];
+
+        return artworksWithStatus;
+    } catch (error) {
+        console.error('Error getting artworks with user status:', error);
         return [];
     }
 }

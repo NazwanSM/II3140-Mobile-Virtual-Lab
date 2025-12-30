@@ -1,13 +1,14 @@
 import { getProfile } from '@/lib';
-import { useFocusEffect } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Image, ScrollView, StatusBar, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Pressable, ScrollView, StatusBar, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BottomNavbar from '../../components/BottomNavbar';
 import DashboardCard from '../../components/DashboardCard';
 import ProgressCard from '../../components/ProgressCard';
 
 export default function HomeScreen() {
+  const router = useRouter();
   const [userData, setUserData] = useState({ 
     name: '', 
     points: 0,
@@ -65,7 +66,10 @@ return (
             </View>
           ) : (
             <View className="flex-row items-start">
-              <View className="w-16 h-full mr-4 ">
+              <Pressable 
+                onPress={() => router.push('/(tabs)/profile')}
+                className="w-16 h-full mr-4"
+              >
                 <View className="overflow-hidden items-center justify-center">
                   <Image 
                     source={require('../../assets/images/Profile - Men.png')} 
@@ -73,8 +77,11 @@ return (
                     resizeMode="contain"
                   />
                 </View>
-              </View>
-              <View className="flex-1 z-10">
+              </Pressable>
+              <Pressable 
+                onPress={() => router.push('/(tabs)/profile')}
+                className="flex-1 z-10"
+              >
                 <Text className="text-xs text-foundation-yellow-dark font-satoshi-medium italic">
                   Halo, selamat datang kembali
                 </Text>
@@ -89,13 +96,13 @@ return (
                   </Text>
                 </View>
 
-                <View className="flex-row items-center bg-foundation-yellow-light px-10 py-1.5 rounded-full self-start mt-2 shadow-sm">
+                <View className="flex-row items-center bg-foundation-yellow-light px-4 py-1.5 rounded-full self-start mt-2 shadow-sm">
                   <Text className="text-xs mr-1.5">🪶</Text>
                   <Text className="text-xs font-satoshi-bold text-foundation-yellow-darker">
                     {userData.points.toLocaleString('id-ID')} 
                   </Text>
                 </View>
-              </View>
+              </Pressable>
 
               <View className="w-28 h-28 -mt-1.4 -mr-6">
                 <Image 

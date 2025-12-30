@@ -200,14 +200,49 @@ export async function getProfile() {
         .from('profiles')
         .select('*')
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
 
-        if (error) {
+        if (error && error.code !== 'PGRST116') {
         console.error('Error fetching profile:', error);
         return null;
         }
 
+        if (profile) {
         return profile;
+        }
+
+        console.log('Profile not found, creating new profile for user:', user.id);
+        const { data: newProfile, error: insertError } = await supabase
+        .from('profiles')
+        .insert({
+            id: user.id,
+            email: user.email,
+            full_name: user.user_metadata?.full_name || user.email?.split('@')[0],
+            username: user.user_metadata?.username || null,
+            institution: user.user_metadata?.institution || null,
+            tinta: 0
+        })
+        .select()
+        .single();
+
+        if (insertError) {
+        if (insertError.code === '23505') {
+            console.log('Profile already exists, fetching again...');
+            const { data: existingProfile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .single();
+            
+            return existingProfile;
+        }
+        
+        console.error('Error creating profile:', insertError);
+        return null;
+        }
+
+        return newProfile;
+
     } catch (error) {
         console.error('Error getting profile:', error);
         return null;
