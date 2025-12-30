@@ -1,8 +1,8 @@
 import { updateGameProgress } from '@/lib/actions/progress';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, Dimensions, Modal, Pressable, ScrollView, StatusBar, Text, TextInput, View } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { ActivityIndicator, Alert, Dimensions, Modal, Pressable, ScrollView, StatusBar, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const puzzleData = {
@@ -83,7 +83,6 @@ const puzzleData = {
 export default function CrosswordGame() {
     const { rows, cols, grid, numbers, answers, clues } = puzzleData;
     const router = useRouter();
-    const inputRef = useRef<TextInput>(null);
     const screenWidth = Dimensions.get('window').width;
     const gridSize = Math.min(screenWidth - 48, 450);
     const cellSize = gridSize / cols;
@@ -191,10 +190,9 @@ export default function CrosswordGame() {
         }
 
         setActiveCell({ row, col });
-        setTimeout(() => inputRef.current?.focus(), 100);
     };
 
-    const handleInputChange = (text: string) => {
+    const handleInputChange = (letter: string) => {
         const { row, col } = activeCell;
         if (grid[row][col] === 0) return;
 
@@ -205,32 +203,30 @@ export default function CrosswordGame() {
             setCellStatus(Array(rows).fill(null).map(() => Array(cols).fill(null)));
         }
 
-        if (text.length > 0) {
-            const letter = text[text.length - 1].toUpperCase();
-            if (letter.match(/[A-Z]/)) {
-                const newGridState = gridState.map((r) => [...r]);
-                newGridState[row][col] = letter;
-                setGridState(newGridState);
+        const upperLetter = letter.toUpperCase();
+        if (upperLetter.match(/[A-Z]/)) {
+            const newGridState = gridState.map((r) => [...r]);
+            newGridState[row][col] = upperLetter;
+            setGridState(newGridState);
 
-                let nextRow = row;
-                let nextCol = col;
+            let nextRow = row;
+            let nextCol = col;
 
+            if (direction === 'across') {
+                nextCol++;
+            } else {
+                nextRow++;
+            }
+
+            while (nextRow < rows && nextCol < cols) {
+                if (grid[nextRow]?.[nextCol] === 1) {
+                    setActiveCell({ row: nextRow, col: nextCol });
+                    return;
+                }
                 if (direction === 'across') {
                     nextCol++;
                 } else {
                     nextRow++;
-                }
-
-                while (nextRow < rows && nextCol < cols) {
-                    if (grid[nextRow]?.[nextCol] === 1) {
-                        setActiveCell({ row: nextRow, col: nextCol });
-                        return;
-                    }
-                    if (direction === 'across') {
-                        nextCol++;
-                    } else {
-                        nextRow++;
-                    }
                 }
             }
         }
@@ -341,7 +337,7 @@ export default function CrosswordGame() {
                         setIsCompleted(true);
                         Alert.alert(
                             'Selamat! 🎉',
-                            'Kamu berhasil menyelesaikan Teka-Teki Silang!\n\nKamu mendapat +1000 tinta ✨',
+                            'Kamu berhasil menyelesaikan Teka-Teki Silang!\n\nKamu mendapat +6000 tinta ✨',
                             [{ text: 'OK' }]
                         );
                     } else if (result.error === 'Already completed') {
@@ -468,19 +464,6 @@ export default function CrosswordGame() {
                             {activeClue || 'Ketuk kotak untuk memulai'}
                         </Text>
                     </View>
-                    <TextInput
-                        ref={inputRef}
-                        value=""
-                        onChangeText={handleInputChange}
-                        onKeyPress={({ nativeEvent }) => {
-                            if (nativeEvent.key === 'Backspace') {
-                                handleBackspace();
-                            }
-                        }}
-                        autoCapitalize="characters"
-                        autoCorrect={false}
-                        style={{ position: 'absolute', left: -1000 }}
-                    />
 
                     {message && (
                         <Text className={`text-center mb-4 text-base font-satoshi-bold ${message.includes('Selamat') ? 'text-green-600' : 'text-red-600'}`}>
@@ -526,7 +509,7 @@ export default function CrosswordGame() {
                             Keyboard Virtual
                         </Text>
                         <View className="flex-row flex-wrap justify-center gap-1">
-                            {'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map((letter) => (
+                            {'QWERTYUIOPASDFGHJKLZXCVBNM'.split('').map((letter) => (
                                 <Pressable
                                     key={letter}
                                     onPress={() => handleInputChange(letter)}

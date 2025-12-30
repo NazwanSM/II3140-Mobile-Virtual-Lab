@@ -78,7 +78,7 @@ export default function VideoDetailScreen() {
             
             if (result.success) {
                 setIsCompleted(true);
-                alert('Selamat! Kamu telah menyelesaikan video ini dan mendapat +500 tinta ✨');
+                alert('Selamat! Kamu telah menyelesaikan video ini dan mendapat +750 tinta ✨');
             } else if (result.error === 'Already completed') {
                 setIsCompleted(true);
             }

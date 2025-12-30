@@ -82,12 +82,21 @@ export async function updateModuleProgress(moduleId: string, progressType: 'modu
         .eq('id', user.id)
         .single();
 
-      if (profile) {
+      if (profile && (progressType === 'modul')) {
         const profileData = profile as unknown as Profile;
         const currentTinta = profileData.tinta || 0;
         await supabase
           .from('profiles')
           .update({ tinta: currentTinta + 500 })
+          .eq('id', user.id);
+      }
+
+      else if (profile && (progressType === 'video')) {
+        const profileData = profile as unknown as Profile;
+        const currentTinta = profileData.tinta || 0;
+        await supabase
+          .from('profiles')
+          .update({ tinta: currentTinta + 750 })
           .eq('id', user.id);
       }
     }
@@ -132,12 +141,21 @@ export async function updateGameProgress(gameId: string) {
       .eq('id', user.id)
       .single();
 
-    if (profile) {
+    if (profile && gameId == 'tts') {
       const profileData = profile as unknown as Profile;
       const currentTinta = profileData.tinta || 0;
       await supabase
         .from('profiles')
-        .update({ tinta: currentTinta + 1000 })
+        .update({ tinta: currentTinta + 6000 })
+        .eq('id', user.id);
+    }
+
+    else if (profile && gameId == 'dragdrop') {
+      const profileData = profile as unknown as Profile;
+      const currentTinta = profileData.tinta || 0;
+      await supabase
+        .from('profiles')
+        .update({ tinta: currentTinta + 9000 })
         .eq('id', user.id);
     }
 

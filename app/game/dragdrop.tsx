@@ -152,7 +152,7 @@ export default function DragAndDropGame() {
                         setIsCompleted(true);
                         Alert.alert(
                             'Selamat! 🎉',
-                            'Kamu berhasil menyelesaikan semua soal Drag and Drop!\n\nKamu mendapat +1000 tinta ✨',
+                            'Kamu berhasil menyelesaikan semua soal Drag and Drop!\n\nKamu mendapat +9000 tinta ✨',
                             [
                                 {
                                     text: 'OK',
