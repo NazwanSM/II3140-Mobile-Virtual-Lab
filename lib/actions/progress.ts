@@ -99,6 +99,55 @@ export async function updateModuleProgress(moduleId: string, progressType: 'modu
   }
 }
 
+export async function updateGameProgress(gameId: string) {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return { error: 'User not authenticated' };
+    }
+
+    const { data: existingRecord } = await supabase
+      .from('game_progress')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('game_id', gameId)
+      .single();
+
+    if (existingRecord) {
+      return { error: 'Already completed', success: false };
+    }
+
+    await supabase
+      .from('game_progress')
+      .insert({
+        user_id: user.id,
+        game_id: gameId,
+        completed: true,
+      });
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('tinta')
+      .eq('id', user.id)
+      .single();
+
+    if (profile) {
+      const profileData = profile as unknown as Profile;
+      const currentTinta = profileData.tinta || 0;
+      await supabase
+        .from('profiles')
+        .update({ tinta: currentTinta + 1000 })
+        .eq('id', user.id);
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating game progress:', error);
+    return { error: 'Failed to update progress', success: false };
+  }
+}
+
 export async function getModuleProgress(moduleId: string) {
   try {
     const { data: { user } } = await supabase.auth.getUser();

@@ -24,7 +24,6 @@ function NavItem({ icon, label, isActive, onPress }: NavItemProps) {
 
     useEffect(() => {
         if (isActive) {
-            // Animate in (less bouncy)
             width.value = withSpring(85, {
                 damping: 20,
                 stiffness: 180,
@@ -34,7 +33,6 @@ function NavItem({ icon, label, isActive, onPress }: NavItemProps) {
                 stiffness: 180,
             });
         } else {
-            // Instant disappear for inactive
             width.value = 26;
             opacity.value = 0;
         }
@@ -135,8 +133,8 @@ export default function BottomNavbar() {
         {
             icon: 'game-controller' as const,
             label: 'Main',
-            paths: ['/games', '/(tabs)/games'],
-            route: '/(tabs)/games' as const,
+            paths: ['/bermain', '/(tabs)/bermain'],
+            route: '/(tabs)/bermain' as const,
         },
         {
             icon: 'person' as const,
