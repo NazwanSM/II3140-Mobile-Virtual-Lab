@@ -56,12 +56,13 @@ export default function WelcomeScreen() {
     };
 
     return (
-        <View className="flex-1">
+        <View className="flex-1 bg-[#FCC212]">
         <StatusBar barStyle="dark-content" backgroundColor="#F9C74E" />
         <Image
                 source={require('@/assets/images/Background-Login.png')}
                 className="absolute w-full h-full"
                 resizeMode="cover"
+                fadeDuration={0}
             />
         <SafeAreaView className="flex-1">
             <View className="mt-4 items-end w-full px-6">

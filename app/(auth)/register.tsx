@@ -116,13 +116,14 @@ export default function RegisterScreen() {
     };
 
     return (
-        <View className="flex-1">
+        <View className="flex-1 bg-[#FCC212]">
             <StatusBar barStyle="dark-content" backgroundColor="#FCC212" />
             
             <Image
                 source={require('@/assets/images/Background-Login.png')}
                 className="absolute w-full h-full"
                 resizeMode="cover"
+                fadeDuration={0}
             />
             
             <SafeAreaView className="flex-1" edges={['top']}>
