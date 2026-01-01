@@ -4,8 +4,7 @@ export { supabase } from './supabase/client';
 // Auth actions
 export {
     getProfile,
-    getSession, getUser, signInWithEmail, signInWithUsername, signOut, signUpWithEmail
-    , signInWithGoogle
+    getSession, getUser, signInWithEmail, signInWithGoogle, signInWithUsername, signOut, signUpWithEmail
 } from './actions/auth';
 
 // Profile actions
@@ -16,7 +15,7 @@ export {
 
 // Progress actions
 export {
-    getAllProgress, getModuleProgress, getRecentProgress, updateModuleProgress
+    getAllProgress, getDashboardStats, getModuleProgress, getRecentProgress, updateModuleProgress
 } from './actions/progress';
 
 // Quiz actions

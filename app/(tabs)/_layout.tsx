@@ -20,18 +20,12 @@ export default function TabLayout() {
           title: 'Belajar',
         }}
       />
-      {/* <Tabs.Screen
-        name="games"
+      <Tabs.Screen
+        name="latihan"
         options={{
-          title: 'Games',
+          title: 'Latihan',
         }}
       />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: 'Profile',
-        }}
-      /> */}
     </Tabs>
   );
 }
