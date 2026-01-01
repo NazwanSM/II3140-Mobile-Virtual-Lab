@@ -38,9 +38,9 @@ export default function DashboardCard({
             
             <View className="pl-5 pt-3.5 pb-3.5 flex-1">
                 <View className="absolute top-3 right-3 z-20">
-                    <View className="w-9 h-9 rounded-full bg-yellow-400 items-center justify-center shadow-sm">
-                        <Ionicons name="ribbon" size={14} color="#B8860B" style={{ marginBottom: -3 }} />
-                        <Text className="text-[9px] font-satoshi-bold" style={{ color: '#8B6914' }}>
+                    <View className="absolute top-1 right-1 bg-white/20 rounded-full px-2 py-1.5 flex-row items-center shadow-md">
+                        <Image source={require('../assets/images/medalLogo.png')} style={{ width: 24, height: 22, marginBottom: -1 }}  className="mr-1 bg-white rounded-full px-2 py-1 " />
+                        <Text className="text-sm font-satoshi-bold" style={{ color: '#FFFFFF' }}>
                             {completed}/{total}
                         </Text>
                     </View>
@@ -58,7 +58,7 @@ export default function DashboardCard({
                     </View>
                 </View>
                 
-                <View className="absolute right-10 w-[180px] h-[125px]">
+                <View className="absolute right-10 w-[190px] h-[140px] top-[-10px]">
                     <Image 
                         source={imageSource} 
                         className="w-full h-full"

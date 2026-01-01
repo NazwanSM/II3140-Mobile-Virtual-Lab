@@ -171,8 +171,12 @@ export default function ProfileScreen() {
                         </View>
 
                         <View className="items-center mb-4">
-                            <View className="bg-[#2C3E50] px-6 py-2 rounded-full flex-row items-center">
-                                <Text className="text-xs mr-1.5">🪶</Text>
+                            <View className="bg-[#2C3E50] px-3 py-2 rounded-full flex-row items-center">
+                                <Image
+                                    source={require('../../assets/images/tintaLogo.png')}
+                                    className="w-6 h-6 mr-2 bg-white rounded-full p-0.5"
+                                    resizeMode="contain"
+                                />
                                 <Text className="text-white font-satoshi-bold">
                                     {profile?.tinta?.toLocaleString('id-ID') || '0'} tinta
                                 </Text>

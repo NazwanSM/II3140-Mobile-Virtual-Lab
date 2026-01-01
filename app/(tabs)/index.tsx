@@ -1,5 +1,6 @@
-import { getProfile } from '@/lib';
+import { getDashboardStats, getProfile } from '@/lib';
 import { useFocusEffect, useRouter } from 'expo-router';
+import { School } from 'lucide-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Image, Pressable, ScrollView, StatusBar, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -16,10 +17,18 @@ export default function HomeScreen() {
     username: '',
   });
   const [loading, setLoading] = useState(true);
+  const [dashboardStats, setDashboardStats] = useState({
+    belajar: { completed: 0, total: 3 },
+    latihan: { completed: 0, total: 3 },
+    bermain: { completed: 0, total: 2 },
+  });
 
   const fetchUserProfile = useCallback(async () => {
     try {
-      const profile = await getProfile();
+      const [profile, stats] = await Promise.all([
+        getProfile(),
+        getDashboardStats(),
+      ]);
       
       if (profile) {
         setUserData({
@@ -29,6 +38,8 @@ export default function HomeScreen() {
           username: profile.username || '',
         });
       }
+
+      setDashboardStats(stats);
     } catch (error) {
       console.error('Error fetching profile:', error);
     } finally {
@@ -90,14 +101,18 @@ return (
                 </Text>
 
                 <View className="flex-row items-center mt-1 opacity-80">
-                  <Text className="text-xs mr-1">🏫</Text>
-                  <Text className="text-[10px] font-satoshi-medium text-foundation-yellow-dark">
+                  <School size={14} color="#BD920E" strokeWidth={2}/>
+                  <Text className="text-[10px] font-satoshi-medium text-foundation-yellow-dark ml-1">
                     {userData.school}
                   </Text>
                 </View>
 
-                <View className="flex-row items-center bg-foundation-yellow-light px-4 py-1.5 rounded-full self-start mt-2 shadow-sm">
-                  <Text className="text-xs mr-1.5">🪶</Text>
+                <View className="flex-row items-center bg-foundation-yellow-light/50 px-3 py-1.5 rounded-full self-start mt-2 shadow-sm">
+                  <Image
+                    source={require('../../assets/images/tintaLogo.png')}
+                    className="w-5 h-5 mr-1 bg-white rounded-full p-0.5"
+                    resizeMode="contain"
+                  />
                   <Text className="text-xs font-satoshi-bold text-foundation-yellow-darker">
                     {userData.points.toLocaleString('id-ID')} 
                   </Text>
@@ -143,8 +158,8 @@ return (
                 imageSource={require('../../assets/images/BELAJAR.png')}
                 href="/belajar"
                 gradientColors={['#7A96E3', '#5A8BEE']}
-                completed={3}
-                total={3}
+                completed={dashboardStats.belajar.completed}
+                total={dashboardStats.belajar.total}
               />
 
               <DashboardCard 
@@ -153,18 +168,18 @@ return (
                 imageSource={require('../../assets/images/LATIH.png')}
                 href="/latihan"
                 gradientColors={['#D45272', '#813855']}
-                completed={2}
-                total={3}
+                completed={dashboardStats.latihan.completed}
+                total={dashboardStats.latihan.total}
               />
 
               <DashboardCard 
                 title="Main"
-                description="Lebih paham lembuat dengan bermain bersama Aksara"
+                description="Latih pemahamanmu dengan bermain bersama Aksara"
                 imageSource={require('../../assets/images/MAIN.png')}
                 href="/bermain"
                 gradientColors={['#DCC37B', '#B39246']}
-                completed={1}
-                total={3}
+                completed={dashboardStats.bermain.completed}
+                total={dashboardStats.bermain.total}
               />
             </View>
           </View>

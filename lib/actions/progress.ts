@@ -4,6 +4,10 @@ interface ExistingProgress {
   progress: number;
   modul_viewed: boolean;
   video_viewed: boolean;
+  mudah_completed: boolean;
+  sedang_completed: boolean;
+  sulit_completed: boolean;
+  completed: boolean;
 }
 
 interface Profile {
@@ -29,31 +33,34 @@ export async function updateModuleProgress(moduleId: string, progressType: 'modu
 
     if (existingProgress) {
       const progress = existingProgress as unknown as ExistingProgress;
-      const currentProgress = progress.progress || 0;
-      let newProgress = currentProgress;
+      let shouldUpdate = false;
+      let newModulViewed = progress.modul_viewed || false;
+      let newVideoViewed = progress.video_viewed || false;
 
       if (progressType === 'modul' && !progress.modul_viewed) {
-        newProgress += 20;
+        newModulViewed = true;
         shouldAddTinta = true;
-
-        await supabase
-          .from('learning_progress')
-          .update({
-            progress: newProgress,
-            modul_viewed: true,
-            completed: newProgress >= 100,
-          })
-          .eq('user_id', user.id)
-          .eq('module_id', moduleId);
+        shouldUpdate = true;
       } else if (progressType === 'video' && !progress.video_viewed) {
-        newProgress += 20;
+        newVideoViewed = true;
         shouldAddTinta = true;
+        shouldUpdate = true;
+      }
+
+      if (shouldUpdate) {
+        const newProgress = 
+          (newModulViewed ? 20 : 0) +
+          (newVideoViewed ? 20 : 0) +
+          (progress.mudah_completed ? 20 : 0) +
+          (progress.sedang_completed ? 20 : 0) +
+          (progress.sulit_completed ? 20 : 0);
 
         await supabase
           .from('learning_progress')
           .update({
             progress: newProgress,
-            video_viewed: true,
+            modul_viewed: newModulViewed,
+            video_viewed: newVideoViewed,
             completed: newProgress >= 100,
           })
           .eq('user_id', user.id)
@@ -71,6 +78,9 @@ export async function updateModuleProgress(moduleId: string, progressType: 'modu
           progress: initialProgress,
           modul_viewed: progressType === 'modul',
           video_viewed: progressType === 'video',
+          mudah_completed: false,
+          sedang_completed: false,
+          sulit_completed: false,
           completed: false,
         });
     }
@@ -249,5 +259,55 @@ export async function getRecentProgress(limit: number = 5) {
   } catch (error) {
     console.error('Error getting recent progress:', error);
     return [];
+  }
+}
+
+export async function getDashboardStats() {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return {
+        belajar: { completed: 0, total: 3 },
+        latihan: { completed: 0, total: 3 },
+        bermain: { completed: 0, total: 2 },
+      };
+    }
+
+    const { data: learningProgress } = await supabase
+      .from('learning_progress')
+      .select('modul_viewed, video_viewed, mudah_completed, sedang_completed, sulit_completed')
+      .eq('user_id', user.id);
+
+    const belajarCompleted = learningProgress?.filter(
+      (p) => p.modul_viewed && p.video_viewed
+    ).length || 0;
+
+    const latihanCompleted = learningProgress?.filter(
+      (p) => p.mudah_completed && p.sedang_completed && p.sulit_completed
+    ).length || 0;
+
+    const { data: gameProgress } = await supabase
+      .from('game_progress')
+      .select('game_id, completed')
+      .eq('user_id', user.id)
+      .eq('completed', true);
+
+    const completedGames = gameProgress?.filter(
+      (g) => g.game_id === 'tts' || g.game_id === 'dragdrop'
+    ).length || 0;
+
+    return {
+      belajar: { completed: Math.min(belajarCompleted, 3), total: 3 },
+      latihan: { completed: Math.min(latihanCompleted, 3), total: 3 },
+      bermain: { completed: Math.min(completedGames, 2), total: 2 },
+    };
+  } catch (error) {
+    console.error('Error getting dashboard stats:', error);
+    return {
+      belajar: { completed: 0, total: 3 },
+      latihan: { completed: 0, total: 3 },
+      bermain: { completed: 0, total: 2 },
+    };
   }
 }

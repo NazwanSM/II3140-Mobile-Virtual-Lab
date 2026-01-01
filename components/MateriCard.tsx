@@ -21,7 +21,7 @@ export default function MateriCard({
 
     return (
         <View className="bg-white rounded-2xl shadow-lg overflow-hidden mb-6">
-            <View className="relative h-40 w-full">
+            <View className="relative h-52 w-full">
                 <Image
                     source={thumbnail}
                     className="w-full h-full"
@@ -69,7 +69,7 @@ export default function MateriCard({
                     </View>
                     
                     <Pressable 
-                        onPress={() => router.push(`./latihan/${materiId}`)}
+                        onPress={() => router.push(`/latihan`)}
                         className="w-full px-4 py-2 bg-[#F5E6E8] border-2 border-[#D4A5B0] rounded-xl active:opacity-70"
                     >
                         <Text className="text-center text-sm font-satoshi-bold text-[#8B4A5E]">

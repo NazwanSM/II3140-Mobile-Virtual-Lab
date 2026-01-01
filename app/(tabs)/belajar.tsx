@@ -8,6 +8,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import BottomNavbar from '../../components/BottomNavbar';
 import MateriCard from '../../components/MateriCard';
 
+const thumbnailMap: { [key: number]: any } = {
+    1: require('../../assets/images/Thumbnail-modul1.png'),
+    2: require('../../assets/images/Thumbnail-modul2.png'),
+    3: require('../../assets/images/Thumbnail-modul3.png'),
+};
+
 export default function BelajarScreen() {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
@@ -28,7 +34,7 @@ export default function BelajarScreen() {
                         materiId: module.id.toString(),
                         materiNumber: module.module_number,
                         title: module.title,
-                        thumbnail: require('../../assets/images/frameMateri.png'),
+                        thumbnail: thumbnailMap[module.module_number],
                         progress: progressRecord?.progress || 0,
                     };
                 }));
