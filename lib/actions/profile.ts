@@ -313,3 +313,27 @@ export async function getArtworksWithUserStatus() {
         return [];
     }
 }
+
+export async function getLeaderboard() {
+    try {
+        const { data: profiles, error } = await supabase
+            .from('profiles')
+            .select('id, full_name, username, tinta')
+            .order('tinta', { ascending: false });
+
+        if (error) {
+            console.error('Error fetching leaderboard:', error);
+            return [];
+        }
+
+        const leaderboard = profiles?.map((profile, index) => ({
+            ...profile,
+            rank: index + 1,
+        })) || [];
+
+        return leaderboard;
+    } catch (error) {
+        console.error('Error getting leaderboard:', error);
+        return [];
+    }
+}

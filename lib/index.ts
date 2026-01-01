@@ -9,6 +9,7 @@ export {
 
 // Profile actions
 export {
+    getLeaderboard,
     getTintaBalance,
     getUserArtworks, selectArtwork, updatePassword, updateProfile
 } from './actions/profile';

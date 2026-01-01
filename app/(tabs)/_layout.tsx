@@ -26,6 +26,12 @@ export default function TabLayout() {
           title: 'Latihan',
         }}
       />
+      <Tabs.Screen
+        name="sosial"
+        options={{
+          title: 'Sosial',
+        }}
+      />
     </Tabs>
   );
 }

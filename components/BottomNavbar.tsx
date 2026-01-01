@@ -137,10 +137,10 @@ export default function BottomNavbar() {
             route: '/(tabs)/bermain' as const,
         },
         {
-            icon: 'person' as const,
-            label: 'Profil',
-            paths: ['/profile', '/(tabs)/profile'],
-            route: '/(tabs)/profile' as const,
+            icon: 'people' as const,
+            label: 'Sosial',
+            paths: ['/sosial', '/(tabs)/sosial'],
+            route: '/(tabs)/sosial' as const,
         },
     ];
 
