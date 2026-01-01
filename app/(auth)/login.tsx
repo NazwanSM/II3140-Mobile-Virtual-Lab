@@ -21,6 +21,7 @@ import Animated, {
     withSpring
 } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Image as ExpoImage } from 'expo-image';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const SHEET_HEIGHT = SCREEN_HEIGHT * 0.75;
@@ -93,11 +94,12 @@ export default function LoginScreen() {
         <View className="flex-1 bg-[#FCC212]">
             <StatusBar barStyle="dark-content" backgroundColor="#FCC212" />
             
-            <Image
-                source={require('@/assets/images/Background-Login.png')}
-                className="absolute w-full h-full"
-                resizeMode="cover"
-                fadeDuration={0}
+            <ExpoImage
+                source={require('@/assets/images/Background-Login.png')} 
+                style={{ position: 'absolute', width: '100%', height: '100%' }}
+                contentFit="cover"
+                transition={300} 
+                cachePolicy="memory-disk"
             />
             
             <SafeAreaView className="flex-1" edges={['top']}>

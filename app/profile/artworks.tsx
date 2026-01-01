@@ -5,6 +5,7 @@ import { Stack, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Image, Modal, Pressable, StatusBar, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Image as ExpoImage } from 'expo-image';
 
 interface Artwork {
     id: string;
@@ -175,10 +176,11 @@ export default function ArtworkCollectionScreen() {
                         </View>
 
                         <View className="px-0 pb-10 items-start">
-                            <Image
+                            <ExpoImage
                                 source={require('../../assets/images/Karakter-Profile.png')}
                                 style={{ width: 380, height: 380 }}
-                                resizeMode="contain"
+                                contentFit="contain"
+                                cachePolicy="memory-disk"
                             />
                         </View>
 

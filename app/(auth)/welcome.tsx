@@ -9,6 +9,7 @@ import Animated, {
     withTiming
 } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Image as ExpoImage } from 'expo-image';
 
 const logoAksara = require('@/assets/images/LogoAksaraMedium.png');
 const characterWelcome = require('@/assets/images/Welcome.png');
@@ -58,11 +59,12 @@ export default function WelcomeScreen() {
     return (
         <View className="flex-1 bg-[#FCC212]">
         <StatusBar barStyle="dark-content" backgroundColor="#F9C74E" />
-        <Image
-                source={require('@/assets/images/Background-Login.png')}
-                className="absolute w-full h-full"
-                resizeMode="cover"
-                fadeDuration={0}
+        <ExpoImage
+                source={require('@/assets/images/Background-Login.png')} 
+                style={{ position: 'absolute', width: '100%', height: '100%' }}
+                contentFit="cover"
+                transition={300} 
+                cachePolicy="memory-disk"
             />
         <SafeAreaView className="flex-1">
             <View className="mt-4 items-end w-full px-6">
