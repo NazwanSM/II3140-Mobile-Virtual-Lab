@@ -90,7 +90,7 @@ export default function BelajarScreen() {
                     className="flex-1"
                 >
                     <View className="px-8 mt-5">
-                        <Text className="text-xl font-satoshi-bold text-black mb-3">
+                        <Text className="text-xl font-satoshi-bold text-black mb-5">
                             Mau <Text className="text-foundation-blue-normal">belajar</Text> apa hari ini?
                         </Text>
 

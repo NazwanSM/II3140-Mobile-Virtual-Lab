@@ -25,13 +25,7 @@ export default function GameCard({
     };
 
     return (
-        <View className="bg-white rounded-3xl overflow-hidden mb-6 t.shadowMd" style={{
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.15,
-            shadowRadius: 8,
-            elevation: 8,
-        }}>
+        <View className="bg-white rounded-2xl overflow-hidden mb-6 border border-gray-100">
             <View className="relative w-full h-56">
                 <Image 
                     source={imageSrc} 
@@ -40,7 +34,7 @@ export default function GameCard({
                 />
             </View>
 
-            <View className="py-5">
+            <View className="py-4 px-3">
                 <Text className="text-lg font-satoshi-bold text-foundation-blue-darker mb-4">
                     {title}
                 </Text>

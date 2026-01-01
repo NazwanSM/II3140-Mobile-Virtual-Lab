@@ -62,7 +62,7 @@ export default function LatihanCard({
                 </View>
             </View>
 
-            <View className="p-4">
+            <View className="py-4 px-3">
                 <Text className="text-base font-satoshi-bold text-gray-900 mb-3" numberOfLines={2}>
                     {title}
                 </Text>

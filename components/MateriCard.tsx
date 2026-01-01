@@ -20,7 +20,7 @@ export default function MateriCard({
     const router = useRouter();
 
     return (
-        <View className="bg-white rounded-2xl shadow-lg overflow-hidden mb-6">
+        <View className="bg-white rounded-2xl shadow-lg overflow-hidden mb-6 border border-gray-100">
             <View className="relative h-52 w-full">
                 <Image
                     source={thumbnail}
@@ -33,7 +33,7 @@ export default function MateriCard({
                 </View>
             </View>
 
-            <View className="py-5">
+            <View className="py-4 px-3">
                 <Text className="text-lg font-satoshi-bold text-gray-800 mb-4" numberOfLines={2}>
                     {title}
                 </Text>
