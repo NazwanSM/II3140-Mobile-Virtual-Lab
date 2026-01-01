@@ -191,9 +191,9 @@ export default function RegisterScreen() {
                                     <View className="flex-row items-center bg-gray-50 rounded-xl px-4 py-3 border border-gray-200">
                                         <Ionicons name="person" size={20} color="#000000" />
                                         <TextInput
-                                            className="flex-1 text-gray-800 font-satoshi text-base ml-3"
+                                            className="flex-1 text-gray-800 font-satoshi-medium ml-3"
                                             placeholder="Masukkan nama lengkap"
-                                            placeholderTextColor="#000000"
+                                            placeholderTextColor="#9CA3AF"
                                             value={fullName}
                                             onChangeText={setFullName}
                                         />
@@ -207,9 +207,9 @@ export default function RegisterScreen() {
                                     <View className="flex-row items-center bg-gray-50 rounded-xl px-4 py-3 border border-gray-200">
                                         <Ionicons name="business" size={20} color="#000000" />
                                         <TextInput
-                                            className="flex-1 text-gray-800 font-satoshi text-base ml-3"
+                                            className="flex-1 text-gray-800 font-satoshi-medium ml-3"
                                             placeholder="Masukkan institusi"
-                                            placeholderTextColor="#000000"
+                                            placeholderTextColor="#9CA3AF"
                                             value={institution}
                                             onChangeText={setInstitution}
                                         />
@@ -223,9 +223,9 @@ export default function RegisterScreen() {
                                     <View className="flex-row items-center bg-gray-50 rounded-xl px-4 py-3 border border-gray-200">
                                         <Ionicons name="at" size={20} color="#000000" />
                                         <TextInput
-                                            className="flex-1 text-gray-800 font-satoshi text-base ml-3"
+                                            className="flex-1 text-gray-800 font-satoshi-medium ml-3"
                                             placeholder="Masukkan nama pengguna"
-                                            placeholderTextColor="#000000"
+                                            placeholderTextColor="#9CA3AF"
                                             value={username}
                                             onChangeText={setUsername}
                                             autoCapitalize="none"
@@ -240,9 +240,9 @@ export default function RegisterScreen() {
                                     <View className="flex-row items-center bg-gray-50 rounded-xl px-4 py-3 border border-gray-200">
                                         <Ionicons name="mail" size={20} color="#000000" />
                                         <TextInput
-                                            className="flex-1 text-gray-800 font-satoshi text-base ml-3"
+                                            className="flex-1 text-gray-800 font-satoshi-medium ml-3"
                                             placeholder="Masukkan alamat email"
-                                            placeholderTextColor="#000000"
+                                            placeholderTextColor="#9CA3AF"
                                             value={email}
                                             onChangeText={setEmail}
                                             autoCapitalize="none"
@@ -258,9 +258,9 @@ export default function RegisterScreen() {
                                     <View className="flex-row items-center bg-gray-50 rounded-xl px-4 py-3 border border-gray-200">
                                         <Ionicons name="lock-closed" size={20} color="#000000" />
                                         <TextInput
-                                            className="flex-1 text-gray-800 font-satoshi text-base ml-3"
+                                            className="flex-1 text-gray-800 font-satoshi-medium ml-3"
                                             placeholder="Masukkan kata sandi"
-                                            placeholderTextColor="#000000"
+                                            placeholderTextColor="#9CA3AF"
                                             value={password}
                                             onChangeText={setPassword}
                                             secureTextEntry={!showPassword}
