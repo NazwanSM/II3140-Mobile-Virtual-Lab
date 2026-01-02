@@ -3,8 +3,13 @@ import { updateModuleProgress } from '@/lib/actions/progress';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Modal, Pressable, ScrollView, StatusBar, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Modal, Platform, Pressable, ScrollView, StatusBar, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as FileSystem from 'expo-file-system/legacy';
+import * as Sharing from 'expo-sharing';
+import { Asset } from 'expo-asset';
+
+const isWeb = Platform.OS === 'web';
 
 type ContentSection = {
     type?: 'points' | 'table';
@@ -25,6 +30,13 @@ export default function ModulDetailScreen() {
     const [showDownloadModal, setShowDownloadModal] = useState(false);
     const [completingProgress, setCompletingProgress] = useState(false);
     const [isCompleted, setIsCompleted] = useState(false);
+    const [downloading, setDownloading] = useState(false);
+
+    const modulePdfAssets: { [key: number]: any } = {
+        1: require('../../assets/modul/Modul-1.pdf'),
+        2: require('../../assets/modul/Modul-2.pdf'),
+        3: require('../../assets/modul/Modul-3.pdf'),
+    };
 
     const fetchModule = useCallback(async () => {
         try {
@@ -52,12 +64,59 @@ export default function ModulDetailScreen() {
     }, [id, fetchModule]);
 
     const handleDownload = async () => {
+        if (!module) return;
+        
         try {
+            setDownloading(true);
+            const moduleNumber = module.module_number;
+            const fileName = `Modul-${moduleNumber}.pdf`;
+            
+            if (isWeb) {
+                Alert.alert('Info', 'Download tidak tersedia di web browser. Silakan gunakan aplikasi mobile.');
+                setShowDownloadModal(false);
+                setDownloading(false);
+                return;
+            }
+            
+            const pdfAsset = modulePdfAssets[moduleNumber];
+            if (!pdfAsset) {
+                Alert.alert('Error', 'File modul tidak ditemukan');
+                setDownloading(false);
+                return;
+            }
+
+            const asset = Asset.fromModule(pdfAsset);
+            await asset.downloadAsync();
+            
+            if (!asset.localUri) {
+                Alert.alert('Error', 'Gagal memuat file');
+                setDownloading(false);
+                return;
+            }
+
+            const fileUri = `${FileSystem.cacheDirectory}${fileName}`;
+            await FileSystem.copyAsync({
+                from: asset.localUri,
+                to: fileUri,
+            });
+
+            const isAvailable = await Sharing.isAvailableAsync();
+            if (isAvailable) {
+                await Sharing.shareAsync(fileUri, {
+                    mimeType: 'application/pdf',
+                    dialogTitle: `Bagikan ${fileName}`,
+                    UTI: 'com.adobe.pdf',
+                });
+            } else {
+                Alert.alert('Berhasil', `File ${fileName} berhasil diunduh ke cache`);
+            }
+            
             setShowDownloadModal(false);
-            alert('Download akan segera dimulai');
         } catch (error) {
             console.error('Error downloading file:', error);
-            alert('Gagal mengunduh file');
+            Alert.alert('Error', 'Gagal mengunduh file. Silakan coba lagi.');
+        } finally {
+            setDownloading(false);
         }
     };
 
@@ -290,11 +349,21 @@ export default function ModulDetailScreen() {
 
                             <Pressable 
                                 onPress={handleDownload}
-                                className="bg-[#5A8BEE] rounded-2xl py-4 mb-3"
+                                disabled={downloading}
+                                className={`rounded-2xl py-4 mb-3 ${downloading ? 'bg-gray-400' : 'bg-[#5A8BEE]'}`}
                             >
-                                <Text className="text-white text-center font-satoshi-bold text-base">
-                                    Unduh
-                                </Text>
+                                {downloading ? (
+                                    <View className="flex-row items-center justify-center">
+                                        <ActivityIndicator size="small" color="#FFFFFF" />
+                                        <Text className="text-white text-center font-satoshi-bold text-base ml-2">
+                                            Mengunduh...
+                                        </Text>
+                                    </View>
+                                ) : (
+                                    <Text className="text-white text-center font-satoshi-bold text-base">
+                                        Unduh
+                                    </Text>
+                                )}
                             </Pressable>
 
                             <Pressable 
