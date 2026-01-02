@@ -1,6 +1,7 @@
+import { Image as ExpoImage } from 'expo-image';
 import { Href, router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Image, Pressable, StatusBar, Text, View } from 'react-native';
+import { Image, Platform, Pressable, StatusBar, Text, View } from 'react-native';
 import Animated, {
     runOnJS,
     useAnimatedStyle,
@@ -9,10 +10,10 @@ import Animated, {
     withTiming
 } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Image as ExpoImage } from 'expo-image';
 
 const logoAksara = require('@/assets/images/LogoAksaraMedium.png');
 const characterWelcome = require('@/assets/images/Welcome.png');
+const isWeb = Platform.OS === 'web';
 
 export default function WelcomeScreen() {
     const [isTransitioning, setIsTransitioning] = useState(false);
@@ -71,6 +72,7 @@ export default function WelcomeScreen() {
                 <Image 
                 source={logoAksara}
                 className="w-32 h-32"
+                style={isWeb ? { width: 80, height: 80 } : undefined}
                 resizeMode="contain"
                 />
             </View>
@@ -84,6 +86,7 @@ export default function WelcomeScreen() {
                 <Image 
                 source={characterWelcome}
                 className="w-72 h-96"
+                style={isWeb ? { width: 200, height: 280 } : undefined}
                 resizeMode="contain"
                 />
             </View>

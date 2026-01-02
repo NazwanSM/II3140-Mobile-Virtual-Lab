@@ -3,8 +3,10 @@ import { getQuizQuestions, getQuizResults, submitQuiz } from '@/lib/actions/quiz
 import { Ionicons } from '@expo/vector-icons';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Image, Modal, Pressable, ScrollView, StatusBar, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, Modal, Platform, Pressable, ScrollView, StatusBar, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+const isWeb = Platform.OS === 'web';
 
 interface Question {
     id: string;
@@ -486,13 +488,14 @@ export default function QuizScreen() {
                     </View>                 
                     <View className="w-full max-w-sm bg-white rounded-3xl overflow-hidden border-2 border-black">
                         <View className="p-6 items-center">
-                            <View className="w-40 h-40 items-center justify-center mb-4">
+                            <View className="w-40 h-40 items-center justify-center mb-4" style={isWeb ? { width: 160, height: 160 } : undefined}>
                                 <Image 
                                     source={isCorrectAnswer 
                                         ? require('../../../assets/images/Feedback-Correct.png')
                                         : require('../../../assets/images/Feedback-Wrong.png')
                                     }
                                     className="w-full h-full"
+                                    style={isWeb ? { width: 160, height: 160 } : undefined}
                                     resizeMode="contain"
                                 />
                             </View>

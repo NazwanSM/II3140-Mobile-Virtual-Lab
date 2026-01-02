@@ -1,11 +1,13 @@
 import { getProfile } from '@/lib/actions/auth';
 import { getArtworksWithUserStatus } from '@/lib/actions/profile';
 import { Ionicons } from '@expo/vector-icons';
+import { Image as ExpoImage } from 'expo-image';
 import { Stack, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Image, Modal, Pressable, StatusBar, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Modal, Platform, Pressable, StatusBar, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Image as ExpoImage } from 'expo-image';
+
+const isWeb = Platform.OS === 'web';
 
 interface Artwork {
     id: string;
@@ -142,7 +144,7 @@ export default function ArtworkCollectionScreen() {
                                         key={artwork.id}
                                         onPress={() => setSelectedArtwork(artwork)}
                                         className="w-[32%] mb-4 rounded-2xl overflow-hidden border-2 border-gray-300 bg-gray-100"
-                                        style={{ aspectRatio: 2/3 }}
+                                        style={isWeb ? { width: 100, height: 150, aspectRatio: 2/3 } : { aspectRatio: 2/3 }}
                                     >
                                         {({ pressed }) => (
                                             <>
@@ -151,12 +153,14 @@ export default function ArtworkCollectionScreen() {
                                                     <Image
                                                         source={getImageSource(artwork.image_url)}
                                                         className="w-full h-full"
+                                                        style={isWeb ? { width: 100, height: 150 } : undefined}
                                                         resizeMode="cover"
                                                     />
                                                 ) : (
                                                     <Image
                                                         source={getImageSource(artwork.image_locked_url)}
                                                         className="w-full h-full"
+                                                        style={isWeb ? { width: 100, height: 150 } : undefined}
                                                         resizeMode="cover"
                                                     />
                                                 )}
@@ -196,21 +200,23 @@ export default function ArtworkCollectionScreen() {
                         className="flex-1 bg-black/80 items-center justify-center p-6"
                         onPress={() => setSelectedArtwork(null)}
                     >
-                        <Pressable className="bg-white rounded-[34px] overflow-hidden w-full max-w-sm">
+                        <Pressable className="bg-white rounded-[34px] overflow-hidden w-full max-w-sm" style={isWeb ? { maxWidth: 320 } : undefined}>
                             {selectedArtwork && (
                                 <>
                                     {/* Large Artwork Image */}
-                                    <View className="aspect-[2/3] w-full">
+                                    <View className="aspect-[2/3] w-full" style={isWeb ? { width: 320, height: 480 } : undefined}>
                                         {selectedArtwork.is_unlocked && getImageSource(selectedArtwork.image_hover_url) ? (
                                             <Image
                                                 source={getImageSource(selectedArtwork.image_hover_url)}
                                                 className="w-full h-full"
+                                                style={isWeb ? { width: 320, height: 480 } : undefined}
                                                 resizeMode="cover"
                                             />
                                         ) : getImageSource(selectedArtwork.image_locked_hover_url) ? (
                                             <Image
                                                 source={getImageSource(selectedArtwork.image_locked_hover_url)}
                                                 className="w-full h-full"
+                                                style={isWeb ? { width: 320, height: 480 } : undefined}
                                                 resizeMode="cover"
                                             />
                                         ) : (

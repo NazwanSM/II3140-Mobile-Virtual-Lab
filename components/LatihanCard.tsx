@@ -1,6 +1,8 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { Image, Pressable, Text, View } from 'react-native';
+import { Image, Platform, Pressable, Text, View } from 'react-native';
+
+const isWeb = Platform.OS === 'web';
 
 interface LatihanCardProps {
     moduleId: string;
@@ -48,6 +50,7 @@ export default function LatihanCard({
                 <Image
                     source={thumbnail}
                     className="w-full h-40"
+                    style={isWeb ? { width: '100%', height: 160 } : undefined}
                     resizeMode="cover"
                 />
                 <View className="absolute top-3 right-3 bg-white rounded-full px-3 py-1.5 flex-row items-center shadow-sm">
@@ -57,6 +60,7 @@ export default function LatihanCard({
                     <Image
                         source={require('../assets/images/LatihanIcon.png')}
                         className="w-4 h-4"
+                        style={isWeb ? { width: 16, height: 16 } : undefined}
                         resizeMode="contain"
                     />
                 </View>

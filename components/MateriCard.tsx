@@ -1,6 +1,8 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { Image, Pressable, Text, View } from 'react-native';
+import { Image, Platform, Pressable, Text, View } from 'react-native';
+
+const isWeb = Platform.OS === 'web';
 
 interface MateriCardProps {
     materiId: string;
@@ -21,10 +23,11 @@ export default function MateriCard({
 
     return (
         <View className="bg-white rounded-2xl shadow-lg overflow-hidden mb-6 border border-gray-100">
-            <View className="relative h-52 w-full">
+            <View className="relative h-52 w-full" style={isWeb ? { height: 208, width: '100%' } : undefined}>
                 <Image
                     source={thumbnail}
                     className="w-full h-full"
+                    style={isWeb ? { width: '100%', height: '100%' } : undefined}
                     resizeMode="cover"
                 />
                 <View className="absolute top-4 right-4 bg-white rounded-full px-4 py-1.5 flex-row items-center shadow-md">

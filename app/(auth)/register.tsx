@@ -1,5 +1,6 @@
 import { signInWithGoogle, signUpWithEmail } from '@/lib';
 import { Ionicons } from '@expo/vector-icons';
+import { Image as ExpoImage } from 'expo-image';
 import { Href, router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
@@ -21,13 +22,13 @@ import Animated, {
     withSpring
 } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Image as ExpoImage } from 'expo-image';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const SHEET_HEIGHT = SCREEN_HEIGHT * 0.85;
 
 const logoAksara = require('@/assets/images/LogoAksaraMedium.png');
 const characterMonster = require('@/assets/images/Monster-Login.png');
+const isWeb = Platform.OS === 'web';
 
 export default function RegisterScreen() {
     const [fullName, setFullName] = useState('');
@@ -133,6 +134,7 @@ export default function RegisterScreen() {
                     <Image 
                         source={logoAksara}
                         className="w-32 h-32"
+                        style={isWeb ? { width: 80, height: 80 } : undefined}
                         resizeMode="contain"
                     />
                 </View>
@@ -153,6 +155,7 @@ export default function RegisterScreen() {
                         <Image 
                             source={characterMonster}
                             className="w-40 h-40"
+                            style={isWeb ? { width: 100, height: 100 } : undefined}
                             resizeMode="contain"
                         />
                     </View>
@@ -305,6 +308,7 @@ export default function RegisterScreen() {
                                     <Image 
                                         source={require('@/assets/images/Google-Icon.png')}
                                         className="w-5 h-5 mr-3"
+                                        style={isWeb ? { width: 20, height: 20, marginRight: 12 } : undefined}
                                         resizeMode="contain"
                                     />
                                     <Text className="text-gray-700 text-base font-satoshi-medium">

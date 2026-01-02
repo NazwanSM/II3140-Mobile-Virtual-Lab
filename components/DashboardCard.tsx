@@ -1,7 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Href, useRouter } from 'expo-router';
-import { Image, ImageSourcePropType, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ImageSourcePropType, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
+const isWeb = Platform.OS === 'web';
 
 interface DashboardCardProps {
     title: string;
@@ -39,7 +41,7 @@ export default function DashboardCard({
             <View className="pl-5 pt-3.5 pb-3.5 flex-1">
                 <View className="absolute top-3 right-3 z-20">
                     <View className="absolute top-1 right-1 bg-white/20 rounded-full px-2 py-1.5 flex-row items-center shadow-md">
-                        <Image source={require('../assets/images/medalLogo.png')} style={{ width: 24, height: 22, marginBottom: -1 }}  className="mr-1 bg-white rounded-full px-2 py-1 " />
+                        <Image source={require('../assets/images/medalLogo.png')} style={isWeb ? { width: 12, height: 22, marginBottom: -1 } : { width: 24, height: 22, marginBottom: -1 }}  className="mr-1 bg-white rounded-full px-2 py-1 " />
                         <Text className="text-sm font-satoshi-bold" style={{ color: '#FFFFFF' }}>
                             {completed}/{total}
                         </Text>
@@ -58,10 +60,11 @@ export default function DashboardCard({
                     </View>
                 </View>
                 
-                <View className="absolute right-10 w-[190px] h-[140px] top-[-10px]">
+                <View className="absolute right-10 w-[190px] h-[140px] top-[-10px]" style={isWeb ? { width: 190, height: 140, right: 40, top: -10 } : undefined}>
                     <Image 
                         source={imageSource} 
                         className="w-full h-full"
+                        style={isWeb ? { width: '100%', height: '100%' } : undefined}
                         resizeMode="contain"
                     />
                 </View>

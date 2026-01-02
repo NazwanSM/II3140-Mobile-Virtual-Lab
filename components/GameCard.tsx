@@ -1,6 +1,8 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { Image, ImageSourcePropType, Pressable, Text, View } from 'react-native';
+import { Image, ImageSourcePropType, Platform, Pressable, Text, View } from 'react-native';
+
+const isWeb = Platform.OS === 'web';
 
 export interface GameCardProps {
     gameId: string;
@@ -26,10 +28,11 @@ export default function GameCard({
 
     return (
         <View className="bg-white rounded-2xl overflow-hidden mb-6 border border-gray-100">
-            <View className="relative w-full h-56">
+            <View className="relative w-full h-56" style={isWeb ? { width: '100%', height: 224 } : undefined}>
                 <Image 
                     source={imageSrc} 
                     className="w-full h-full" 
+                    style={isWeb ? { width: '100%', height: '100%' } : undefined}
                     resizeMode="cover"
                 />
             </View>

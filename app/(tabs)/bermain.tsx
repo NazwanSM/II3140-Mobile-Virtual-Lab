@@ -1,10 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Image, ImageBackground, Pressable, ScrollView, StatusBar, Text, View } from 'react-native';
+import { Image, ImageBackground, Platform, Pressable, ScrollView, StatusBar, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BottomNavbar from '../../components/BottomNavbar';
 import GameCard from '../../components/GameCard';
+
+const isWeb = Platform.OS === 'web';
 
 export default function BermainScreen() {
     const router = useRouter();
@@ -31,6 +33,7 @@ export default function BermainScreen() {
                 <ImageBackground
                     source={require('../../assets/images/Background-Header.png')}
                     className="pt-20 px-6 pb-10 rounded-b-[30px] w-full"
+                    style={isWeb ? { width: '100%', paddingTop: 80, paddingHorizontal: 24, paddingBottom: 40 } : undefined}
                     resizeMode="cover"
                 >
                     <View className="flex-row items-center justify-center relative">
@@ -44,6 +47,7 @@ export default function BermainScreen() {
                         <Image
                             source={require('../../assets/images/BelajarIcon.png')}
                             className="w-8 h-8 mr-3"
+                            style={isWeb ? { width: 32, height: 32, marginRight: 12 } : undefined}
                             resizeMode="contain"
                         />
                         <Text className="text-2xl font-satoshi-bold text-gray-900">

@@ -3,7 +3,7 @@ import { getAllProgress } from '@/lib/actions/progress';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Image, ImageBackground, Pressable, ScrollView, StatusBar, Text, View } from 'react-native';
+import { ActivityIndicator, Image, ImageBackground, Platform, Pressable, ScrollView, StatusBar, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BottomNavbar from '../../components/BottomNavbar';
 import MateriCard from '../../components/MateriCard';
@@ -13,6 +13,7 @@ const thumbnailMap: { [key: number]: any } = {
     2: require('../../assets/images/Thumbnail-modul2.png'),
     3: require('../../assets/images/Thumbnail-modul3.png'),
 };
+const isWeb = Platform.OS === 'web';
 
 export default function BelajarScreen() {
     const router = useRouter();
@@ -64,6 +65,7 @@ export default function BelajarScreen() {
                     <ImageBackground
                         source={require('../../assets/images/Background-Header.png')}
                         className="pt-20 px-6 pb-10 rounded-b-[30px] w-full"
+                        style={isWeb ? { width: '100%', paddingTop: 80, paddingHorizontal: 24, paddingBottom: 40 } : undefined}
                         resizeMode="cover"
                     >
                         <View className="flex-row items-center justify-center relative">
@@ -77,6 +79,7 @@ export default function BelajarScreen() {
                             <Image
                                 source={require('../../assets/images/BelajarIcon.png')}
                                 className="w-8 h-8 mr-3"
+                                style={isWeb ? { width: 32, height: 32, marginRight: 12 } : undefined}
                                 resizeMode="contain"
                             />
                             <Text className="text-2xl font-satoshi-bold text-gray-900">

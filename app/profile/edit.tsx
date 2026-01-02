@@ -136,7 +136,7 @@ export default function EditProfileScreen() {
                             <View className="relative">
                                 <View className="w-32 h-32 rounded-full bg-gray-200 overflow-hidden border-4 border-white shadow-lg">
                                     <Image 
-                                        source={require('../../assets/images/Profile - Men.png')}
+                                        source={require('../../assets/images/Profile - Men 2.png')}
                                         className="w-full h-full"
                                         resizeMode="cover"
                                     />

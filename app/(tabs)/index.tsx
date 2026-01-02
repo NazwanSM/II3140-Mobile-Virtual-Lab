@@ -2,11 +2,13 @@ import { getDashboardStats, getProfile, getRecentActivities, RecentActivity } fr
 import { useFocusEffect, useRouter } from 'expo-router';
 import { School } from 'lucide-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Image, Pressable, ScrollView, StatusBar, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Platform, Pressable, ScrollView, StatusBar, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BottomNavbar from '../../components/BottomNavbar';
 import DashboardCard from '../../components/DashboardCard';
 import ProgressCard from '../../components/ProgressCard';
+
+const isWeb = Platform.OS === 'web';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -71,6 +73,7 @@ return (
           <Image
             source={require('../../assets/images/Background-Header.png')}
             className="absolute top-0 left-0 right-0 bottom-0 w-[112%] h-[160%] translate-x-0 -translate-y-1 rounded-b-[30px]"
+            style={isWeb ? { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, width: '112%', height: '160%' } : undefined}
             resizeMode="cover"
           />
           
@@ -88,6 +91,7 @@ return (
                   <Image 
                     source={require('../../assets/images/Profile - Men.png')} 
                     className="w-16 h-16"
+                    style={isWeb ? { width: 64, height: 64 } : undefined}
                     resizeMode="contain"
                   />
                 </View>
@@ -114,6 +118,7 @@ return (
                   <Image
                     source={require('../../assets/images/tintaLogo.png')}
                     className="w-5 h-5 mr-1 bg-white rounded-full p-0.5"
+                    style={isWeb ? { width: 20, height: 20, marginRight: 4 } : undefined}
                     resizeMode="contain"
                   />
                   <Text className="text-xs font-satoshi-bold text-foundation-yellow-darker">
@@ -126,6 +131,7 @@ return (
                 <Image 
                   source={require('../../assets/images/Header.png')} 
                   className="w-full h-full rounded-b-[30px]"
+                  style={isWeb ? { width: 112, height: 112 } : undefined}
                   resizeMode="contain"
                 />
               </View>

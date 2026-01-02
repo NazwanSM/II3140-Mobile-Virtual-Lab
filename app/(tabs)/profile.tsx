@@ -2,7 +2,9 @@ import { signOut } from '@/lib/actions/auth';
 import { getArtworksWithUserStatus, getProfile } from '@/lib/actions/profile';
 import { Ionicons } from '@expo/vector-icons';import { LinearGradient } from 'expo-linear-gradient';import { Href, useFocusEffect, useRouter } from 'expo-router';
 import React, { useCallback, useState } from 'react';
-import { ActivityIndicator, Alert, Clipboard, Image, ImageBackground, Modal, Pressable, ScrollView, StatusBar, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Clipboard, Image, ImageBackground, Modal, Platform, Pressable, ScrollView, StatusBar, Text, View } from 'react-native';
+
+const isWeb = Platform.OS === 'web';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BottomNavbar from '../../components/BottomNavbar';
 
@@ -130,6 +132,7 @@ export default function ProfileScreen() {
                     <ImageBackground
                         source={require('../../assets/images/Background-Profile.png')}
                         className="pt-16 pb-24 px-6"
+                        style={isWeb ? { width: '100%', paddingTop: 64, paddingBottom: 96, paddingHorizontal: 24 } : undefined}
                         resizeMode="cover"
                     >
                         <Pressable 
@@ -143,10 +146,11 @@ export default function ProfileScreen() {
                     <View className="mx-0 -mt-20 bg-white rounded-[60px] shadow-lg p-6 border border-gray-200">
                         {/* Profile Picture */}
                         <View className="items-center -mt-16 mb-4">
-                            <View className="w-28 h-28 rounded-full border-4 border-white bg-gray-200 overflow-hidden shadow-lg">
+                            <View className="w-28 h-28 rounded-full border-4 border-white bg-gray-200 overflow-hidden shadow-lg" style={isWeb ? { width: 112, height: 112 } : undefined}>
                                 <Image 
-                                    source={require('../../assets/images/Profile - Men.png')}
+                                    source={require('../../assets/images/Profile - Men 2.png')}
                                     className="w-full h-full"
+                                    style={isWeb ? { width: '100%', height: '100%' } : undefined}
                                     resizeMode="cover"
                                 />
                             </View>
@@ -175,6 +179,7 @@ export default function ProfileScreen() {
                                 <Image
                                     source={require('../../assets/images/tintaLogo.png')}
                                     className="w-6 h-6 mr-2 bg-white rounded-full p-0.5"
+                                    style={isWeb ? { width: 24, height: 24, marginRight: 8 } : undefined}
                                     resizeMode="contain"
                                 />
                                 <Text className="text-white font-satoshi-bold">
@@ -242,6 +247,7 @@ export default function ProfileScreen() {
                                                             : getImageSource(artwork.image_url) || require('../../assets/images/Profile - Men.png')
                                                     }
                                                     className="w-full h-full"
+                                                    style={isWeb ? { width: '100%', height: '100%' } : undefined}
                                                     resizeMode="cover"
                                                 />
                                             ) : (
@@ -252,6 +258,7 @@ export default function ProfileScreen() {
                                                             : getImageSource(artwork.image_locked_url) || require('../../assets/images/Profile - Men.png')
                                                     }
                                                     className="w-full h-full"
+                                                    style={isWeb ? { width: '100%', height: '100%' } : undefined}
                                                     resizeMode="cover"
                                                 />
                                             )}
