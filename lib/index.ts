@@ -16,8 +16,10 @@ export {
 
 // Progress actions
 export {
-    getAllProgress, getDashboardStats, getModuleProgress, getRecentProgress, updateModuleProgress
+    getAllProgress, getDashboardStats, getModuleProgress, getRecentActivities, getRecentProgress, updateModuleProgress
 } from './actions/progress';
+
+export type { RecentActivity } from './actions/progress';
 
 // Quiz actions
 export {

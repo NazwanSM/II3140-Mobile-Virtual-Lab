@@ -244,7 +244,7 @@ export async function getRecentProgress(limit: number = 5) {
       .from('learning_progress')
       .select(`
         *,
-        module:modules(id, title, slug)
+        module:modules(id, title)
       `)
       .eq('user_id', user.id)
       .order('updated_at', { ascending: false })
@@ -258,6 +258,69 @@ export async function getRecentProgress(limit: number = 5) {
     return progress || [];
   } catch (error) {
     console.error('Error getting recent progress:', error);
+    return [];
+  }
+}
+
+export interface RecentActivity {
+  moduleTitle: string;
+  moduleId: string;
+  activityType: 'Belajar' | 'Latihan';
+  badgeColor: 'yellow' | 'red';
+  progress: number;
+  updatedAt: string;
+}
+
+export async function getRecentActivities(limit: number = 2): Promise<RecentActivity[]> {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return [];
+    }
+
+    const { data: progress, error } = await supabase
+      .from('learning_progress')
+      .select(`
+        *,
+        module:modules(id, title)
+      `)
+      .eq('user_id', user.id)
+      .order('updated_at', { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      console.error('Error fetching recent activities:', error);
+      return [];
+    }
+
+    if (!progress || progress.length === 0) {
+      return [];
+    }
+
+    return progress.map((item: any) => {
+      const hasQuizActivity = item.mudah_completed || item.sedang_completed || item.sulit_completed;
+      const hasBelajarActivity = item.modul_viewed || item.video_viewed;
+      
+      let activityType: 'Belajar' | 'Latihan' = 'Belajar';
+      let badgeColor: 'yellow' | 'red' = 'yellow';
+      
+      if (hasQuizActivity && item.progress > 40) {
+        activityType = 'Latihan';
+        badgeColor = 'red';
+      }
+
+      return {
+        moduleTitle: item.module?.title || 'Modul',
+        moduleId: item.module?.id || item.module_id,
+        activityType,
+        badgeColor,
+        progress: item.progress || 0,
+        updatedAt: item.updated_at,
+      };
+    });
+  } catch (error) {
+    console.error('Error getting recent activities:', error);
     return [];
   }
 }

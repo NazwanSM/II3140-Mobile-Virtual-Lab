@@ -56,14 +56,6 @@ export default function SosialScreen() {
         return 'th';
     };
 
-    if (loading) {
-        return (
-        <View className="flex-1 bg-[#E8EAF6] items-center justify-center">
-            <ActivityIndicator size="large" color="#5C6BC0" />
-        </View>
-        );
-    }
-
     return (
         <View className="flex-1 bg-white">
         <StatusBar barStyle="dark-content" backgroundColor="#E8EAF6" />

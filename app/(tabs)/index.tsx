@@ -1,4 +1,4 @@
-import { getDashboardStats, getProfile } from '@/lib';
+import { getDashboardStats, getProfile, getRecentActivities, RecentActivity } from '@/lib';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { School } from 'lucide-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -22,12 +22,14 @@ export default function HomeScreen() {
     latihan: { completed: 0, total: 3 },
     bermain: { completed: 0, total: 2 },
   });
+  const [recentActivities, setRecentActivities] = useState<RecentActivity[]>([]);
 
   const fetchUserProfile = useCallback(async () => {
     try {
-      const [profile, stats] = await Promise.all([
+      const [profile, stats, activities] = await Promise.all([
         getProfile(),
         getDashboardStats(),
+        getRecentActivities(2),
       ]);
       
       if (profile) {
@@ -40,6 +42,7 @@ export default function HomeScreen() {
       }
 
       setDashboardStats(stats);
+      setRecentActivities(activities);
     } catch (error) {
       console.error('Error fetching profile:', error);
     } finally {
@@ -133,21 +136,24 @@ return (
           <View className="px-8 mt-5">
             <Text className="text-xl font-satoshi-bold text-black mb-3">Jejak Belajar Terbaru</Text>
           
-            <ProgressCard 
-              title="Ejaan"
-              date="11/20/2025"
-              progress={27}
-              badge="Belajar"
-              badgeColor="yellow"
-            />
-          
-            <ProgressCard 
-              title="Kalimat Efektif"
-              date="11/20/2025"
-              progress={50}
-              badge="Latihan"
-              badgeColor="red"
-            />
+            {recentActivities.length > 0 ? (
+              recentActivities.map((activity, index) => (
+                <ProgressCard 
+                  key={`${activity.moduleId}-${index}`}
+                  title={activity.moduleTitle}
+                  date={new Date(activity.updatedAt).toLocaleDateString('id-ID')}
+                  progress={activity.progress}
+                  badge={activity.activityType}
+                  badgeColor={activity.badgeColor}
+                />
+              ))
+            ) : (
+              <View className="bg-gray-50 rounded-xl p-4 mb-4">
+                <Text className="text-gray-500 text-center font-satoshi-medium">
+                  Belum ada aktivitas belajar. Mulai belajar sekarang!
+                </Text>
+              </View>
+            )}
 
             <Text className="text-xl font-satoshi-bold text-black mb-3 mt-6">Jelajahi Fitur Aksara</Text>
           
