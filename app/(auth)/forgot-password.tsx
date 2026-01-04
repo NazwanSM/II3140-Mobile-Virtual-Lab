@@ -1,4 +1,3 @@
-import { signInWithGoogle, signInWithUsername } from '@/lib';
 import { Ionicons } from '@expo/vector-icons';
 import { Image as ExpoImage } from 'expo-image';
 import { Href, router } from 'expo-router';
@@ -22,6 +21,7 @@ import Animated, {
     withSpring
 } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { resetPassword } from '@/lib/actions/auth';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const SHEET_HEIGHT = SCREEN_HEIGHT * 0.75;
@@ -30,65 +30,76 @@ const logoAksara = require('@/assets/images/LogoAksaraMedium.png');
 const characterMonster = require('@/assets/images/Monster-Login.png');
 const isWeb = Platform.OS === 'web';
 
-export default function LoginScreen() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
+export default function ForgotPasswordScreen() {
+    const [email, setEmail] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState(false);
 
     const translateY = useSharedValue(SCREEN_HEIGHT);
+    const logoOpacity = useSharedValue(0);
 
     useEffect(() => {
+        logoOpacity.value = withSpring(1, { damping: 20, stiffness: 90 });
         setTimeout(() => {
             translateY.value = withSpring(0, {
                 damping: 20,
                 stiffness: 90,
                 mass: 1,
             });
-        }, 200);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, 100);
     }, []);
 
     const bottomSheetStyle = useAnimatedStyle(() => ({
         transform: [{ translateY: translateY.value }],
     }));
 
-    const handleLogin = async () => {
-        if (!username || !password) {
+    const logoAnimatedStyle = useAnimatedStyle(() => ({
+        opacity: logoOpacity.value,
+    }));
+
+    const handleResetPassword = async () => {
+        if (!email.trim()) {
+            setError('Email atau username harus diisi');
+            return;
+        }
+
+        if (!newPassword || !confirmPassword) {
             setError('Mohon isi semua field');
             return;
         }
 
-        setLoading(true);
-        setError('');
-
-        const result = await signInWithUsername(username, password);
-
-        if (result.error) {
-            setError(result.error);
-            setLoading(false);
+        if (newPassword.length < 6) {
+            setError('Kata sandi minimal 6 karakter');
             return;
         }
 
-        setLoading(false);
-        router.replace('/(tabs)');
-    };
-
-    const handleGoogleLogin = async () => {
-        setLoading(true);
-        setError('');
-
-        const result = await signInWithGoogle();
-
-        if (result.error) {
-            setError(result.error);
-            setLoading(false);
+        if (newPassword !== confirmPassword) {
+            setError('Kata sandi tidak cocok');
             return;
         }
 
+        setLoading(true);
+        setError('');
+        setSuccess(false);
+
+        const result = await resetPassword(email, newPassword);
+
         setLoading(false);
-        router.replace('/(tabs)');
+
+        if (result.error) {
+            setError(result.error);
+            return;
+        }
+
+        setSuccess(true);
+        setTimeout(() => {
+            router.push('/(auth)/login' as Href);
+        }, 2000);
     };
 
     return (
@@ -104,14 +115,14 @@ export default function LoginScreen() {
             />
             
             <SafeAreaView className="flex-1" edges={['top']}>
-                <View className="mt-4 items-end w-full px-6">
+                <Animated.View style={logoAnimatedStyle} className="mt-4 items-end w-full px-6">
                     <Image 
                         source={logoAksara}
                         className="w-32 h-32"
                         style={isWeb ? { width: 80, height: 80 } : undefined}
                         resizeMode="contain"
                     />
-                </View>
+                </Animated.View>
 
                 <Animated.View 
                     style={[
@@ -153,8 +164,12 @@ export default function LoginScreen() {
                             keyboardDismissMode="on-drag"
                         >
                             <View className="p-8 pt-24">
-                                <Text className="text-2xl font-satoshi-bold text-center text-foundation-blue-darker mb-6">
-                                    Masuk
+                                <Text className="text-2xl font-satoshi-bold text-center text-foundation-blue-darker mb-4">
+                                    Buat Kata Sandi Baru
+                                </Text>
+
+                                <Text className="text-sm font-satoshi text-gray-400 mb-4">
+                                    Buat kata sandi baru untuk akunmu.
                                 </Text>
 
                                 {error ? (
@@ -163,62 +178,92 @@ export default function LoginScreen() {
                                     </View>
                                 ) : null}
 
+                                {success ? (
+                                    <View className="bg-green-100 p-4 rounded-lg mb-4">
+                                        <Text className="text-green-800 text-center font-satoshi-medium mb-2">
+                                            Password berhasil direset!
+                                        </Text>
+                                        <Text className="text-green-700 text-center font-satoshi text-sm">
+                                            Anda akan dialihkan ke halaman login...
+                                        </Text>
+                                    </View>
+                                ) : null}
+
                                 <View className="mb-4">
-                                    <Text className="text-foundation-blue-darker font-satoshi-medium mb-2">
-                                        Email atau Username <Text className="text-foundation-red-normal">*</Text>
+                                    <Text className="text-base font-satoshi-medium mb-2 text-foundation-blue-darker">
+                                        Email atau Username
                                     </Text>
-                                    <View className="flex-row items-center bg-gray-50 rounded-xl px-4 py-3.5 border border-gray-200">
-                                        <Ionicons name="at" size={20} color="#000000" />
+                                    <View className="flex-row items-center bg-white rounded-xl px-4 py-3">
+                                        <Ionicons name="mail" size={20} color="#000000" />
                                         <TextInput
                                             className="flex-1 text-gray-800 font-satoshi-medium ml-3"
                                             placeholder="Masukkan email atau username"
                                             placeholderTextColor="#9CA3AF"
-                                            value={username}
-                                            onChangeText={setUsername}
+                                            value={email}
+                                            onChangeText={setEmail}
                                             autoCapitalize="none"
-                                            keyboardType="default"
-                                            style={{ textAlignVertical: 'center' }}
+                                            keyboardType="email-address"
+                                            autoCorrect={false}
+                                            editable={!success}
                                         />
                                     </View>
                                 </View>
 
-                                <View className="mb-2">
-                                    <Text className="text-foundation-blue-darker font-satoshi-medium mb-2">
-                                        Kata Sandi <Text className="text-foundation-red-normal">*</Text>
+                                <View className="mb-4">
+                                    <Text className="text-base font-satoshi-medium mb-2 text-foundation-blue-darker">
+                                        Kata Sandi Baru
                                     </Text>
-                                    <View className="flex-row items-center bg-gray-50 rounded-xl px-4 h-14 border border-gray-200">
+                                    <View className="flex-row items-center bg-white rounded-xl px-4 py-3">
                                         <Ionicons name="lock-closed" size={20} color="#000000" />
                                         <TextInput
                                             className="flex-1 text-gray-800 font-satoshi-medium ml-3"
-                                            placeholder="Masukkan Kata Sandi"
+                                            placeholder="Masukkan kata sandi baru"
                                             placeholderTextColor="#9CA3AF"
-                                            value={password}
-                                            onChangeText={setPassword}
-                                            secureTextEntry={!showPassword}
-                                            style={{ textAlignVertical: 'center' }}
+                                            value={newPassword}
+                                            onChangeText={setNewPassword}
+                                            secureTextEntry={!showNewPassword}
+                                            autoCapitalize="none"
+                                            editable={!success}
                                         />
-                                        <Pressable onPress={() => setShowPassword(!showPassword)}>
+                                        <Pressable onPress={() => setShowNewPassword(!showNewPassword)}>
                                             <Ionicons 
-                                                name={showPassword ? "eye" : "eye-off"} 
-                                                size={22} 
-                                                color="#000000" 
+                                                name={showNewPassword ? "eye-outline" : "eye-off-outline"} 
+                                                size={20} 
+                                                color="#6B7280" 
+                                            />
+                                        </Pressable>
+                                    </View>
+                                </View>
+
+                                <View className="mb-6">
+                                    <Text className="text-base font-satoshi-medium mb-2 text-foundation-blue-darker">
+                                        Konfirmasi Kata Sandi
+                                    </Text>
+                                    <View className="flex-row items-center bg-white rounded-xl px-4 py-3">
+                                        <Ionicons name="lock-closed" size={20} color="#000000" />
+                                        <TextInput
+                                            className="flex-1 text-gray-800 font-satoshi-medium ml-3"
+                                            placeholder="Konfirmasi kata sandi baru"
+                                            placeholderTextColor="#9CA3AF"
+                                            value={confirmPassword}
+                                            onChangeText={setConfirmPassword}
+                                            secureTextEntry={!showConfirmPassword}
+                                            autoCapitalize="none"
+                                            editable={!success}
+                                        />
+                                        <Pressable onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+                                            <Ionicons 
+                                                name={showConfirmPassword ? "eye-outline" : "eye-off-outline"} 
+                                                size={20} 
+                                                color="#6B7280" 
                                             />
                                         </Pressable>
                                     </View>
                                 </View>
 
                                 <Pressable 
-                                    onPress={() => router.push('/(auth)/forgot-password' as Href)}
-                                    className="self-end mb-6"
-                                >
-                                    <Text className="text-foundation-red-normal font-satoshi-medium">
-                                        Lupa kata sandi?
-                                    </Text>
-                                </Pressable>
-
-                                <Pressable 
-                                    onPress={handleLogin}
-                                    disabled={loading}
+                                    onPress={handleResetPassword}
+                                    disabled={loading || success}
                                     className="w-full bg-[#F8AA2D] py-4 rounded-xl items-center active:opacity-80 disabled:opacity-60"
                                     style={{
                                         shadowColor: '#000',
@@ -227,48 +272,15 @@ export default function LoginScreen() {
                                         shadowRadius: 3,
                                         elevation: 2,
                                     }}
-                                >
+                                    >
                                     {loading ? (
-                                        <ActivityIndicator color="white" />
+                                        <ActivityIndicator size="small" color="#FFFFFF" />
                                     ) : (
                                         <Text className="text-white text-base font-satoshi-bold">
-                                            Masuk
+                                            {success ? 'Berhasil' : 'Reset Password'}
                                         </Text>
                                     )}
                                 </Pressable>
-
-                                <View className="flex-row items-center my-6">
-                                    <View className="flex-1 h-px bg-gray-300" />
-                                    <Text className="mx-4 text-gray-400 font-satoshi">Atau</Text>
-                                    <View className="flex-1 h-px bg-gray-300" />
-                                </View>
-
-                                <Pressable 
-                                    onPress={handleGoogleLogin}
-                                    disabled={loading}
-                                    className="w-full bg-white py-4 rounded-xl items-center border border-gray-300 flex-row justify-center active:opacity-80"
-                                >
-                                    <Image 
-                                        source={require('@/assets/images/Google-Icon.png')}
-                                        className="w-5 h-5 mr-3"
-                                        style={isWeb ? { width: 20, height: 20, marginRight: 12 } : undefined}
-                                        resizeMode="contain"
-                                    />
-                                    <Text className="text-gray-700 text-base font-satoshi-medium">
-                                        Masuk Menggunakan Google
-                                    </Text>
-                                </Pressable>
-
-                                <View className="flex-row justify-center mt-6">
-                                    <Text className="text-gray-600 font-satoshi">
-                                        Belum punya akun?{' '}
-                                    </Text>
-                                    <Pressable onPress={() => router.push('/(auth)/register' as Href)}>
-                                        <Text className="text-foundation-blue-darker font-satoshi-bold underline">
-                                            Buat akunmu
-                                        </Text>
-                                    </Pressable>
-                                </View>
                             </View>
                         </ScrollView>
                     </KeyboardAvoidingView>

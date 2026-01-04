@@ -263,3 +263,66 @@ export async function getSession() {
         return null;
     }
 }
+
+export async function resetPassword(emailOrUsername: string, newPassword: string) {
+    try {
+        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailOrUsername);
+        
+        let emailToUse = emailOrUsername;
+        
+        if (!isEmail) {
+            const { data: profile, error: profileError } = await supabase
+                .from('profiles')
+                .select('email')
+                .eq('username', emailOrUsername)
+                .single();
+            
+            if (profileError || !profile) {
+                return { error: 'Email atau username tidak ditemukan' };
+            }
+            
+            emailToUse = profile.email;
+        } else {
+            const { data: profile, error: profileError } = await supabase
+                .from('profiles')
+                .select('email')
+                .eq('email', emailOrUsername)
+                .single();
+            
+            if (profileError || !profile) {
+                return { error: 'Email tidak ditemukan' };
+            }
+        }
+
+        const { error } = await supabase.rpc('reset_user_password', {
+            user_email: emailToUse,
+            new_password: newPassword
+        });
+
+        if (error) {
+            return { error: 'Gagal mereset password. ' + error.message };
+        }
+
+        return { success: true };
+    } catch (error) {
+        console.error('Error resetting password:', error);
+        return { error: 'Gagal mereset password' };
+    }
+}
+
+export async function updatePassword(newPassword: string) {
+    try {
+        const { error } = await supabase.auth.updateUser({
+            password: newPassword,
+        });
+
+        if (error) {
+            return { error: error.message };
+        }
+
+        return { success: true };
+    } catch (error) {
+        console.error('Error updating password:', error);
+        return { error: 'Gagal memperbarui password' };
+    }
+}
