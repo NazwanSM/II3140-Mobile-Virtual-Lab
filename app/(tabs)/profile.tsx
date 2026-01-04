@@ -1,12 +1,13 @@
 import { signOut } from '@/lib/actions/auth';
 import { getArtworksWithUserStatus, getProfile } from '@/lib/actions/profile';
-import { Ionicons } from '@expo/vector-icons';import { LinearGradient } from 'expo-linear-gradient';import { Href, useFocusEffect, useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { Href, useFocusEffect, useRouter } from 'expo-router';
 import React, { useCallback, useState } from 'react';
-import { ActivityIndicator, Alert, Clipboard, Image, ImageBackground, Modal, Platform, Pressable, ScrollView, StatusBar, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, ImageBackground, Modal, Platform, Pressable, ScrollView, StatusBar, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import * as Clipboard from 'expo-clipboard';
 
 const isWeb = Platform.OS === 'web';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import BottomNavbar from '../../components/BottomNavbar';
 
 interface Artwork {
     id: string;
@@ -22,14 +23,11 @@ interface Artwork {
     description: string | null;
 }
 
-// Helper to get image source from database path
 const getImageSource = (imagePath: string | null) => {
     if (!imagePath) return null;
-    
-    // Remove leading slash and get just the filename
+
     const filename = imagePath.startsWith('/') ? imagePath.substring(1) : imagePath;
-    
-    // Map database filenames to local assets
+
     const imageAssets: { [key: string]: any } = {
         'Karakter 1 - Normal.png': require('../../assets/images/Karakter 1 - Normal.png'),
         'Karakter 2 - Normal.png': require('../../assets/images/Karakter 2 - Normal.png'),
@@ -90,11 +88,13 @@ export default function ProfileScreen() {
     );
 
     const handleShareProfile = async () => {
-        setShowToast(true);
-        setTimeout(() => {
-            setShowToast(false);
-        }, 1000);
-
+        if (profile?.username) {
+            Clipboard.setStringAsync(profile.username);
+            setShowToast(true);
+            setTimeout(() => {
+                setShowToast(false);
+            }, 1000);
+        }
     };
 
     const handleLogout = async () => {
@@ -144,7 +144,6 @@ export default function ProfileScreen() {
                     </ImageBackground>
 
                     <View className="mx-0 -mt-20 bg-white rounded-[60px] shadow-lg p-6 border border-gray-200">
-                        {/* Profile Picture */}
                         <View className="items-center -mt-16 mb-4">
                             <View className="w-28 h-28 rounded-full border-4 border-white bg-gray-200 overflow-hidden shadow-lg" style={isWeb ? { width: 112, height: 112 } : undefined}>
                                 <Image 
