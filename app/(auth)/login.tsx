@@ -217,6 +217,13 @@ export default function LoginScreen() {
                                     onPress={handleLogin}
                                     disabled={loading}
                                     className="w-full bg-[#F8AA2D] py-4 rounded-xl items-center active:opacity-80 disabled:opacity-60"
+                                    style={{
+                                        shadowColor: '#000',
+                                        shadowOffset: { width: 0, height: 3 },
+                                        shadowOpacity: 0.3,
+                                        shadowRadius: 3,
+                                        elevation: 2,
+                                    }}
                                 >
                                     {loading ? (
                                         <ActivityIndicator color="white" />
