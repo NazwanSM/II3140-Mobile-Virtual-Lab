@@ -353,6 +353,9 @@ export default function QuizScreen() {
                                     const optionKey = `option_${letter.toLowerCase()}` as keyof Question;
                                     const optionText = currentQ[optionKey] as string;
                                     const isSelected = answers[currentQuestion] === letter;
+                                    const isCorrectAnswer = letter === currentQ.correct_answer;
+                                    const isAnswered = !!answers[currentQuestion];
+                                    const selectedWrong = isAnswered && !isCorrectAnswer && isSelected;
                                     
                                     return (
                                         <Pressable
@@ -360,25 +363,33 @@ export default function QuizScreen() {
                                             onPress={() => handleAnswerSelect(currentQuestion, letter)}
                                             disabled={!!answers[currentQuestion]}
                                             className={`p-4 rounded-2xl border-2 flex-row items-center ${
-                                                isSelected 
+                                                isAnswered && isCorrectAnswer
+                                                    ? 'bg-green-500 border-black'
+                                                    : isSelected 
                                                     ? 'bg-blue-500 border-black' 
                                                     : 'bg-foundation-yellow-light border-black'
                                             }`}
                                             style={({ pressed }) => [{ opacity: pressed && !answers[currentQuestion] ? 0.8 : 1 }]}
                                         >
                                             <View className={`w-10 h-10 rounded-xl border-2 items-center justify-center mr-4 ${
-                                                isSelected 
+                                                isAnswered && isCorrectAnswer
+                                                    ? 'bg-white border-white'
+                                                    : isSelected 
                                                     ? 'bg-white border-white' 
                                                     : 'bg-white border-black'
                                             }`}>
                                                 <Text className={`font-satoshi-bold text-lg ${
-                                                    isSelected ? 'text-blue-500' : 'text-gray-800'
+                                                    isAnswered && isCorrectAnswer
+                                                        ? 'text-green-500'
+                                                        : isSelected ? 'text-blue-500' : 'text-gray-800'
                                                 }`}>
                                                     {letter}
                                                 </Text>
                                             </View>
                                             <Text className={`flex-1 font-satoshi-medium ${
-                                                isSelected ? 'text-white' : 'text-gray-800'
+                                                isAnswered && isCorrectAnswer
+                                                    ? 'text-white'
+                                                    : isSelected ? 'text-white' : 'text-gray-800'
                                             }`}>
                                                 {optionText}
                                             </Text>

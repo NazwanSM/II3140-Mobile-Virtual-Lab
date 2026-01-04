@@ -31,7 +31,6 @@ export default function LatihanScreen() {
                 getAllQuizResults()
             ]);
             
-            // Create score map from quiz results
             const scoreMap = new Map<string, number>();
             (quizResults as QuizResult[])?.forEach((result) => {
                 const key = `${result.module_id}-${result.difficulty}`;
