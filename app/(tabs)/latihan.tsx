@@ -137,8 +137,6 @@ export default function LatihanScreen() {
                         <View className="h-24" />
                     </View>
                 </ScrollView>
-
-                <BottomNavbar />
             </SafeAreaView>
         </View>
     );
