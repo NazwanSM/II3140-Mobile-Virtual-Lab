@@ -40,18 +40,27 @@ export default function LatihanScreen() {
             
             if (modules) {
                 setLatihanList(modules.map(module => {
-                    const progressRecord = progressData?.find((p: any) => p.module_id === module.id);
+                    const quizScores = {
+                        mudah: scoreMap.get(`${module.id}-mudah`) ?? null,
+                        sedang: scoreMap.get(`${module.id}-sedang`) ?? null,
+                        sulit: scoreMap.get(`${module.id}-sulit`) ?? null,
+                    };
+                    
+                    const completedQuizzes = [
+                        quizScores.mudah !== null,
+                        quizScores.sedang !== null,
+                        quizScores.sulit !== null
+                    ].filter(Boolean).length;
+                    
+                    const progress = Math.round((completedQuizzes / 3) * 100);
+                    
                     return {
                         moduleId: module.id.toString(),
                         moduleNumber: module.module_number,
                         title: module.title,
                         thumbnail: require('../../assets/images/frameMateri.png'),
-                        progress: progressRecord?.progress || 0,
-                        quizScores: {
-                            mudah: scoreMap.get(`${module.id}-mudah`) ?? null,
-                            sedang: scoreMap.get(`${module.id}-sedang`) ?? null,
-                            sulit: scoreMap.get(`${module.id}-sulit`) ?? null,
-                        },
+                        progress: progress,
+                        quizScores: quizScores,
                     };
                 }));
             }
