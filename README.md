@@ -1,6 +1,6 @@
 <div align="center">
   <br />
-    <a href="" target="_blank">
+    <a href="https://aksara-mobile.vercel.app/" target="_blank">
       <img src="./assets/images/HeaderGithub.png" alt="Aksara Banner" />
     </a>
   <br />
@@ -11,6 +11,24 @@
     <img src="https://img.shields.io/badge/react_native-20232A.svg?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React Native" />
     <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
   </div>
+
+  <h3 align="center">Aksara : Virtual Lab Mobile App for Tata Tulis Karya Ilmiah</h3>
+
+  <div align="center">
+    Aksara merupakan <b>Mobile Application</b> berbasis <b>Expo (React Native)</b><br/>
+    yang dirancang untuk membantu pelajar memahami Tata Tulis Karya Ilmiah<br/>
+    sesuai kaidah <b>KBBI</b> dan <b>PUEBI</b>.
+  </div>
+
+  <br/>
+
+  <div align="center">
+    🚀 <a href="https://aksara-mobile.vercel.app/" target="_blank"><b>Live Web Demo</b></a> &nbsp;•&nbsp;
+    📦 <a href="https://expo.dev/accounts/nazwan/projects/aksara/builds/8aef5837-8019-4acc-806a-5512c728aba5" target="_blank"><b>Download APK (Android)</b></a>
+  </div>
+</div>
+
+---
 
   <h3 align="center">Aksara : Virtual Lab Mobile App for Tata Tulis Karya Ilmiah</h3>
 
