@@ -76,15 +76,26 @@ Nama *Aksara* melambangkan **huruf dan cahaya pengetahuan**, sejalan dengan visi
 
 ## 🚀 How to Run (Expo)
 
+### Clone Repository
 ```bash
 git clone <repository-url>
 cd aksara-mobile
+```
 
-# setup environment
-cat <<EOF > .env
+### Create Environment Variable
+```bash
+cat > .env <<'EOF'
 EXPO_PUBLIC_SUPABASE_URL=https://qugficsohuryjcqiikyw.supabase.co
 EXPO_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF1Z2ZpY3NvaHVyeWpjcWlpa3l3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY5MzQyNDYsImV4cCI6MjA4MjUxMDI0Nn0.KN28eQRU7w77Nd3UuMRpfB-MAwEwx2F8MZKXjmqT4DA
 EOF
+```
 
+### Install Dependencies
+```bash
 npm install
+```
+
+### Run Expo Development Server
+```bash
 npx expo start -c
+```
