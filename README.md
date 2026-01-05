@@ -1,7 +1,7 @@
 <div align="center">
   <br />
-    <a href="https://intrive.space" target="_blank">
-      <img src="./assets/HeaderGithub.png" alt="Aksara Banner" />
+    <a href="" target="_blank">
+      <img src="./assets/images/HeaderGithub.png" alt="Aksara Banner" />
     </a>
   <br />
 
