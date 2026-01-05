@@ -1,51 +1,90 @@
-# Welcome to your Expo app 👋
+<div align="center">
+  <br />
+    <a href="https://intrive.space" target="_blank">
+      <img src="./assets/HeaderGithub.png" alt="Aksara Banner" />
+    </a>
+  <br />
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+  <br>
+  <div>
+    <img src="https://img.shields.io/badge/expo-000020.svg?style=for-the-badge&logo=expo&logoColor=white" alt="Expo" />
+    <img src="https://img.shields.io/badge/react_native-20232A.svg?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React Native" />
+    <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  </div>
 
-## Get started
+  <h3 align="center">Aksara : Virtual Lab Mobile App for Tata Tulis Karya Ilmiah</h3>
 
-1. Install dependencies
+  <div align="center">
+    Aksara merupakan <b>Mobile Application</b> berbasis <b>Expo (React Native)</b><br/>
+    yang dirancang untuk membantu pelajar memahami Tata Tulis Karya Ilmiah<br/>
+    sesuai kaidah <b>KBBI</b> dan <b>PUEBI</b>.
+  </div>
+</div>
 
-   ```bash
-   npm install
-   ```
+---
 
-2. Start the app
+## 📑 Table of Contents
+1. [🪶 Pendahuluan](#-pendahuluan)
+2. [🧩 Fitur Utama](#-fitur-utama)
+3. [📱 Platform & Teknologi](#-platform--teknologi)
+4. [🚀 How to Run (Expo)](#-how-to-run-expo)
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## 🪶 Pendahuluan
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+**Aksara** adalah platform *Virtual Lab* interaktif berbasis **mobile application** yang membantu pengguna mempelajari **Tata Tulis Karya Ilmiah (TTKI)** secara sistematis dan menyenangkan.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+Aplikasi ini mengusung alur pembelajaran:
 
-## Get a fresh project
+**Belajar ➜ Praktik ➜ Refleksi ➜ Gamifikasi**
 
-When you're ready, run:
+sehingga pengguna tidak hanya memahami teori, tetapi juga terlibat aktif melalui latihan dan permainan edukatif langsung dari perangkat mobile.
+
+Nama *Aksara* melambangkan **huruf dan cahaya pengetahuan**, sejalan dengan visi aplikasi untuk meningkatkan literasi ilmiah secara berkelanjutan.
+
+---
+
+## 🧩 Fitur Utama
+
+### Belajar
+- Kaidah Ejaan dan Tanda Baca (PUEBI)  
+- Diksi dan Kata Baku (KBBI)  
+- Kalimat Efektif  
+
+### Latihan
+- Tingkat kesulitan: Mudah, Sedang, Sulit  
+- Jenis soal: Pilihan ganda, esai singkat, drag & drop  
+- Sistem poin **Tinta**
+
+### Main
+- Teka-Teki Silang (TTS)  
+- Permainan Drag & Drop  
+- Terbuka bertahap sesuai progres belajar
+
+---
+
+## 📱 Platform & Teknologi
+
+- Framework: Expo (React Native)
+- Bahasa: TypeScript
+- Backend: Supabase
+- Platform: Android & iOS
+- Build Tool: Expo CLI
+
+---
+
+## 🚀 How to Run (Expo)
 
 ```bash
-npm run reset-project
-```
+git clone <repository-url>
+cd aksara-mobile
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+# setup environment
+cat <<EOF > .env
+EXPO_PUBLIC_SUPABASE_URL=https://qugficsohuryjcqiikyw.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF1Z2ZpY3NvaHVyeWpjcWlpa3l3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY5MzQyNDYsImV4cCI6MjA4MjUxMDI0Nn0.KN28eQRU7w77Nd3UuMRpfB-MAwEwx2F8MZKXjmqT4DA
+EOF
 
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
-halo saya nazwan cobain
+npm install
+npx expo start -c
